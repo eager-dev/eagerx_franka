@@ -1,0 +1,28 @@
+<launch>
+
+  <arg name="module_path"                       default=""/>
+  <arg name="ns"                                default=""/>
+  <arg name="robot"                             default="" doc="Which robot to spawn (one of {panda,fr3})" />/>
+  <arg name="robot_name"                        default="$(arg robot)"/>
+  <arg name="gazebo"      default="true"  doc="Should the gazebo simulation be launched? Use false in case if you want to include this file and launch gazebo yourself" />                     
+  <arg name="arm_id"      default="$(arg robot)" doc="Name of the robot to spawn" />
+  <arg name="use_gripper" default="true"  doc="Should a franka hand be mounted on the flange?" />
+  <arg name="x"           default="0"     doc="How far forward to place the base of the robot in [m]?" />
+  <arg name="y"           default="0"     doc="How far leftwards to place the base of the robot in [m]?" />
+  <arg name="z"           default="0"     doc="How far upwards to place the base of the robot in [m]?" />
+  <arg name="roll"        default="0"     doc="How much to rotate the base of the robot around its X-axis in [rad]?" />
+  <arg name="pitch"       default="0"     doc="How much to rotate the base of the robot around its Y-axis in [rad]?" />
+  <arg name="yaw"         default="0"     doc="How much to rotate the base of the robot around its Z-axis in [rad]?" />
+  <arg name="xacro_args"  default=""      doc="Additional arguments to pass to panda.urdf.xacro" />
+
+  <arg name="model"                             default="$(find franka_description)/robots/$(arg robot)/$(arg robot).urdf.xacro
+                                                          gazebo:=$(arg gazebo)
+                                                          hand:=$(arg use_gripper)
+                                                          arm_id:=$(arg arm_id)
+                                                          xyz:='$(arg x) $(arg y) $(arg z)'
+                                                          rpy:='$(arg roll) $(arg pitch) $(arg yaw)'
+                                                          $(arg xacro_args)"/>
+
+  <param name="$(arg ns)/$(arg robot_name)/robot_description" command="xacro $(arg model)" />
+
+</launch>
