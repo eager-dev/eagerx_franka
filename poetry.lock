@@ -225,7 +225,7 @@ termcolor = ">=1.1.0,<2.0.0"
 
 [[package]]
 name = "eagerx-pybullet"
-version = "0.1.10"
+version = "0.1.11"
 description = "This repository contains the eagerx_pybllet package, which allows to simulate systems with EAGERx using pybullet."
 category = "main"
 optional = false
@@ -1355,7 +1355,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "176ac95f8daadcc328c4ef0d662641e7fdd77eb29ad48f82196cf752630dba93"
+content-hash = "e901ae4c10a7069f7523b53fab273645947ad9e3d8e9583332cc0faf74f6a775"
 
 [metadata.files]
 absl-py = [
@@ -1504,8 +1504,8 @@ eagerx = [
     {file = "eagerx-0.1.33.tar.gz", hash = "sha256:46a49214cd1aecdcd79d004f446ae337bad48fcc2e296e12b2be2e3ae07be92b"},
 ]
 eagerx-pybullet = [
-    {file = "eagerx_pybullet-0.1.10-py3-none-any.whl", hash = "sha256:23e13aaab767f58b302eeff935526910ea28997c04ba61454b38ce39c2a526ba"},
-    {file = "eagerx_pybullet-0.1.10.tar.gz", hash = "sha256:de0e74dc356d3bdf618d796ce9f0097acaed45baa88f30389ba0962fd5c1f466"},
+    {file = "eagerx_pybullet-0.1.11-py3-none-any.whl", hash = "sha256:b261508ee3e4b3cbab2451d8d60adc70d2cc74205d215987cd3cb4cd7d64b258"},
+    {file = "eagerx_pybullet-0.1.11.tar.gz", hash = "sha256:a443f5998758f68f9ba606ba039ec160d4306c813102a2e8f0f676340d317ccf"},
 ]
 eagerx-utility = [
     {file = "eagerx_utility-0.0.1-py3-none-any.whl", hash = "sha256:8069b9be26dac711eca287ec6b3733560e2b0f7d4e5fb53dc4eaa5b171f016b4"},
