@@ -20,7 +20,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-		    <mesh filename="nut.stl" scale="0.01 0.01 0.01"/>
+		    <mesh filename="nut.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="iron">
         <color rgba="0.6314 0.6157 0.5804 1"/>

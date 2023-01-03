@@ -89,11 +89,11 @@ LOG_DIR = os.path.dirname(eagerx_franka.__file__) + f"/../logs/{NAME}_{datetime.
 if __name__ == "__main__":
     eagerx.set_log_level(eagerx.WARN)
 
-    n_procs = 1
+    n_procs = 1  # sb HER does not support multiprocessing
     rate = 10  # 20
     safe_rate = 20
     T_max = 10.0  # [sec]
-    add_bias = True
+    add_bias = False
     excl_z = False
     USE_POS_CONTROL = False
     MUST_LOG = True
@@ -185,8 +185,8 @@ if __name__ == "__main__":
         robot_des.M.tolist(),
         c.joint_upper,
         c.joint_lower,
-        max_dxyz=[0.2, 0.2, 0.2],  # 10 cm / sec
-        max_dyaw=2 * np.pi / 2,  # 1/5 round / second
+        max_dxyz=[0.2, 0.2, 0.2],
+        max_dyaw=2 * np.pi / 2,
     )
     graph.add(ik)
 
@@ -310,7 +310,7 @@ if __name__ == "__main__":
                 obs, reward, done, info = train_env.step(action)
 
     # Create experiment directory
-    total_steps = 1_600_000
+    total_steps = 2_500_000
     model = sb.SAC(
         "MultiInputPolicy",
         train_env,

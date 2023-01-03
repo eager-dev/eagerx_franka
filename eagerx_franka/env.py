@@ -21,6 +21,9 @@ class ArmEnv(eagerx.BaseEnv):
         self.solid_bias = None
         self.yaw_bias = None
 
+        # Rwd publishers
+        self._pub_rwd = self.backend.Publisher(f"{self.ns}/environment/reward", "float32")
+
     @property
     def observation_space(self) -> gym.spaces.Space:
         obs_space = self._observation_space
@@ -85,6 +88,9 @@ class ArmEnv(eagerx.BaseEnv):
         # Exclude z observations
         if self._exclude_z:
             obs = self._exclude_obs(obs)
+
+        # Publish reward
+        self._pub_rwd.publish(np.array([rwd, rwd_pos, rwd_or, rwd_ctrl, rwd_force, rwd_near], dtype="float32"))
 
         return obs, rwd, done, info
 

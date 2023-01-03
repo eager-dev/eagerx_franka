@@ -195,7 +195,7 @@ class FrankaArm(eagerx.Object):
             joints=joints,
             mode="velocity_control",
             vel_gain=len(joints) * [1.0],
-            max_force=len(joints) * [50.0],  # todo: limit to 1.0?
+            max_force=len(joints) * [25.0],  # todo: limit?
         )
 
         gripper = JointController.make(

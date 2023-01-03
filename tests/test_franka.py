@@ -1,6 +1,5 @@
 import eagerx
 import eagerx_franka
-import eagerx_utility
 
 # Other
 import os
@@ -128,19 +127,6 @@ def test_interbotix(eps, num_steps, sync, rtf, p):
 
     # Initialize empty graph
     graph = eagerx.Graph.create()
-
-    # Create camera
-    # from eagerx_franka.camera.objects import Camera
-    # urdf_path = "/".join(inspect.getfile(Camera).split("/")[:-1]) + "/assets/realsense2_d435.urdf"
-    # cam = Camera.make(
-    #     "cam",
-    #     rate=rate,
-    #     sensors=["rgb"],
-    #     urdf=urdf_path,
-    #     optical_link="camera_color_optical_frame",
-    #     calibration_link="camera_bottom_screw_frame",
-    # )
-    # graph.add(cam)
 
     # Create solid object
     from eagerx_utility.solid.solid import Solid
