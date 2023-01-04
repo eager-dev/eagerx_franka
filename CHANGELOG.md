@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.2 (2023-01-04)
+### Fix
+* Use urdf from bullet examples ([`7532e3e`](https://github.com/eager-dev/eagerx_franka/commit/7532e3ee3a08bbbe01e6ad4681a847e4dee1331e))
+
 ## v0.0.1 (2023-01-02)
 ### Fix
 * Downgrade numpy due to bug in modern robotics ([`ef63920`](https://github.com/eager-dev/eagerx_franka/commit/ef63920df2a5e2557aea721bb75a715e2eb23bd3))
