@@ -48,6 +48,7 @@ class FrankaArm(eagerx.Object):
         self_collision=False,
         fixed_base=True,
         joint_limits=None,
+        regenerate_urdf=False,
     ) -> ObjectSpec:
         """Object spec of FrankaArm"""
         if URDF is None:
@@ -57,7 +58,11 @@ class FrankaArm(eagerx.Object):
         joint_limits = get_joint_limits(robot_type, joint_limits)
 
         # Extract info on franka arm from assets
-        urdf = URDF.from_parameter_server(generate_urdf(robot_type, ns="pybullet_urdf"))
+        if regenerate_urdf:
+            urdf = URDF.from_parameter_server(generate_urdf(robot_type, ns="pybullet_urdf"))
+        else:
+            module_path = os.path.dirname(eagerx_franka.__file__) + "/../assets/"
+            urdf = URDF.from_xml_file(module_path + "franka_panda/panda.urdf")
 
         gripper_names = [joint.name for joint in urdf.joints if "finger" in joint.name]
         gripper_link = [link.name for link in urdf.links if f"{robot_type}_link8" in link.name][0]
@@ -102,6 +107,7 @@ class FrankaArm(eagerx.Object):
         spec.config.joint_upper = joint_upper
         spec.config.vel_limit = vel_limit
         spec.config.urdf = urdf.to_xml_string()
+        spec.config.regenerate_urdf = regenerate_urdf
 
         # Set rates
         spec.sensors.position.rate = rate
@@ -125,17 +131,23 @@ class FrankaArm(eagerx.Object):
     @staticmethod
     @register.engine(PybulletEngine)
     def pybullet_engine(spec: ObjectSpec, graph: EngineGraph):
+        import pybullet as pb
+
         """Engine-specific implementation (Pybullet) of the object."""
         # Set object arguments (as registered per register.engine_params(..) above the engine.add_object(...) method.)
-        # todo: spec.config.urdf: replace "package://interbotix_xsarm_descriptions/" with "os.path.dirname(eagerx_interbotix.__file__) + "/../assets/""
-        module_path = os.path.dirname(eagerx_franka.__file__) + "/../assets/"
+
+        module_path = os.path.dirname(eagerx_franka.__file__) + "/../assets/franka_panda/"
         urdf = spec.config.urdf
-        urdf_sbtd = urdf.replace("package://interbotix_xsarm_descriptions/", module_path)
-        spec.engine.urdf = urdf_sbtd
+        if not spec.config.regenerate_urdf:
+            urdf_sbtd = urdf.replace("package://", module_path)
+            spec.engine.urdf = urdf_sbtd
+        else:
+            spec.engine.urdf = urdf
         spec.engine.basePosition = spec.config.base_pos
         spec.engine.baseOrientation = spec.config.base_or
         spec.engine.fixed_base = spec.config.fixed_base
         spec.engine.self_collision = spec.config.self_collision
+        spec.engine.flags = pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES
 
         lower = spec.config.gripper_lower
         upper = spec.config.gripper_upper

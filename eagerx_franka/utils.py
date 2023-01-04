@@ -5,7 +5,6 @@ from eagerx_utility.utils import launch_node
 
 
 def get_joint_limits(robot_model: str, joint_limits: str):
-    import rospy
 
     config_path = os.path.dirname(eagerx_franka.__file__) + f"/../assets/robots/{robot_model}"
     try:
@@ -13,7 +12,7 @@ def get_joint_limits(robot_model: str, joint_limits: str):
         with open(joint_limits, "r") as yamlfile:
             joint_limits = yaml.safe_load(yamlfile)
     except IOError:
-        rospy.logerr(f"Joint Limits File was not found in: {config_path}")
+        print(f"Joint Limits File was not found in: {config_path}")
         raise
     return joint_limits
 

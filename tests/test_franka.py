@@ -9,6 +9,7 @@ import numpy as np
 
 NP = eagerx.process.NEW_PROCESS
 ENV = eagerx.process.ENVIRONMENT
+PACKAGE_PATH = os.path.dirname(eagerx_franka.__file__) + "/../assets/franka_panda/"
 
 cam_intrinsics = {
     "image_width": 640,
@@ -43,12 +44,14 @@ def position_control(_graph, _arm, source_goal, safe_rate):
     from eagerx_utility.safety.node import SafePositionControl
 
     c = _arm.config
+    urdf = c.urdf
+    urdf_sbtd = urdf.replace("package://", PACKAGE_PATH)
     collision = dict(
         workspace="eagerx_utility.safety.workspaces/exclude_ground",
         # workspace="eagerx_franka.safety.workspaces/exclude_ground_minus_2m",
         margin=0.01,  # [cm]
         gui=False,
-        robot=dict(urdf=c.urdf, basePosition=c.base_pos, baseOrientation=c.base_or),
+        robot=dict(urdf=urdf_sbtd, basePosition=c.base_pos, baseOrientation=c.base_or),
     )
     safe = SafePositionControl.make(
         "safety",
@@ -79,12 +82,14 @@ def velocity_control(_graph, _arm, source_goal, safe_rate):
     from eagerx_utility.safety.node import SafeVelocityControl
 
     c = _arm.config
+    urdf = c.urdf
+    urdf_sbtd = urdf.replace("package://", PACKAGE_PATH)
     collision = dict(
         workspace="eagerx_utility.safety.workspaces/exclude_ground",
         # workspace="eagerx_franka.safety.workspaces/exclude_ground_minus_2m",
         margin=0.01,  # [cm]
         gui=False,
-        robot=dict(urdf=c.urdf, basePosition=c.base_pos, baseOrientation=c.base_or),
+        robot=dict(urdf=urdf_sbtd, basePosition=c.base_pos, baseOrientation=c.base_or),
     )
     safe = SafeVelocityControl.make(
         "safety",
@@ -160,7 +165,7 @@ def test_interbotix(eps, num_steps, sync, rtf, p):
     graph.add(goal)
 
     # Circular goal
-    x, y, z = 0.30, 0.0, 0.05
+    x, y, z = 0.35, 0.0, 0.05
     dx, dy = 0.1, 0.20
     solid.states.lateral_friction.space.update(low=0.1, high=0.4)
     solid.states.orientation.space.update(low=[-1, -1, -1, -1], high=[1, 1, 1, 1])
@@ -194,7 +199,6 @@ def test_interbotix(eps, num_steps, sync, rtf, p):
     ik = EndEffectorDownward.make(
         "ik",
         rate,
-        c.joint_names,
         robot_des.Slist.tolist(),
         robot_des.M.tolist(),
         c.joint_upper,
@@ -232,11 +236,8 @@ def test_interbotix(eps, num_steps, sync, rtf, p):
     engine = PybulletEngine.make(rate=safe_rate, gui=False, egl=False, sync=True, real_time_factor=0.0, process=engine_p)
 
     # Make backend
-    from eagerx.backends.ros1 import Ros1
-
-    backend = Ros1.make()
-    # from eagerx.backends.single_process import SingleProcess
-    # backend = SingleProcess.make()
+    from eagerx.backends.single_process import SingleProcess
+    backend = SingleProcess.make()
 
     # Define environment
     from eagerx_franka.env import ArmEnv

@@ -16,13 +16,16 @@ def position_control(_graph, _arm, source_goal, safe_rate):
     # Create safety node
     from eagerx_utility.safety.node import SafePositionControl
 
+
     c = _arm.config
+    urdf = c.urdf
+    urdf_sbtd = urdf.replace("package://", PACKAGE_PATH)
     collision = dict(
         workspace="eagerx_utility.safety.workspaces/exclude_ground",
         # workspace="eagerx_franka.safety.workspaces/exclude_ground_minus_2m",
         margin=0.01,  # [cm]
         gui=False,
-        robot=dict(urdf=c.urdf, basePosition=c.base_pos, baseOrientation=c.base_or),
+        robot=dict(urdf=urdf_sbtd, basePosition=c.base_pos, baseOrientation=c.base_or),
     )
     safe = SafePositionControl.make(
         "safety",
@@ -53,12 +56,14 @@ def velocity_control(_graph, _arm, source_goal, safe_rate):
     from eagerx_utility.safety.node import SafeVelocityControl
 
     c = _arm.config
+    urdf = c.urdf
+    urdf_sbtd = urdf.replace("package://", PACKAGE_PATH)
     collision = dict(
         workspace="eagerx_utility.safety.workspaces/exclude_ground",
         # workspace="eagerx_franka.safety.workspaces/exclude_ground_minus_2m",
         margin=0.01,  # [cm]
         gui=False,
-        robot=dict(urdf=c.urdf, basePosition=c.base_pos, baseOrientation=c.base_or),
+        robot=dict(urdf=urdf_sbtd, basePosition=c.base_pos, baseOrientation=c.base_or),
     )
     safe = SafeVelocityControl.make(
         "safety",
@@ -84,6 +89,7 @@ def velocity_control(_graph, _arm, source_goal, safe_rate):
 
 NAME = "HER_force_torque"
 LOG_DIR = os.path.dirname(eagerx_franka.__file__) + f"/../logs/{NAME}_{datetime.today().strftime('%Y-%m-%d-%H%M')}"
+PACKAGE_PATH = os.path.dirname(eagerx_franka.__file__) + "/../assets/franka_panda/"
 
 
 if __name__ == "__main__":
@@ -176,15 +182,13 @@ if __name__ == "__main__":
     import eagerx_franka.franka_arm.mr_descriptions as mrd
 
     robot_des = getattr(mrd, robot_type)
-    c = arm.config
     ik = EndEffectorDownward.make(
         "ik",
         rate,
-        c.joint_names,
         robot_des.Slist.tolist(),
         robot_des.M.tolist(),
-        c.joint_upper,
-        c.joint_lower,
+        -np.pi,
+        np.pi,
         max_dxyz=[0.2, 0.2, 0.2],
         max_dyaw=2 * np.pi / 2,
     )
@@ -282,7 +286,7 @@ if __name__ == "__main__":
 
         train_env = SubprocVecEnv([make_env(i) for i in range(n_procs)], start_method="spawn")
     else:
-        train_env = make_env(rank=0, use_ros=True)()
+        train_env = make_env(rank=0, use_ros=False)()
 
     # Initialize model
     if MUST_LOG:
