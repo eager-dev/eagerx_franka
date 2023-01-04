@@ -132,6 +132,7 @@ class FrankaArm(eagerx.Object):
     @register.engine(PybulletEngine)
     def pybullet_engine(spec: ObjectSpec, graph: EngineGraph):
         import pybullet as pb
+
         """Engine-specific implementation (Pybullet) of the object."""
         # Set object arguments (as registered per register.engine_params(..) above the engine.add_object(...) method.)
 
