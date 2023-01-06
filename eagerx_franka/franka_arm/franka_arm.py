@@ -163,6 +163,10 @@ class FrankaArm(eagerx.Object):
         spec.engine.states.position = JointState.make(joints=joints, mode="position")
         spec.engine.states.velocity = JointState.make(joints=joints, mode="velocity")
 
+        # Fix gripper if we are not controlling it.
+        if "gripper_control" not in spec.config.actuators:
+            spec.engine.states.gripper.fixed = True
+
         # Create sensor engine nodes
         from eagerx_pybullet.enginenodes import LinkSensor, JointSensor, JointController
 
@@ -199,7 +203,7 @@ class FrankaArm(eagerx.Object):
             pos_gain=len(joints) * [0.5],
             vel_gain=len(joints) * [1.0],
             max_vel=[0.5 * vel for vel in spec.config.vel_limit],
-            max_force=len(joints) * [10.0],
+            max_force=len(joints) * [2.5],
         )
         vel_control = JointController.make(
             "vel_control",
@@ -207,7 +211,7 @@ class FrankaArm(eagerx.Object):
             joints=joints,
             mode="velocity_control",
             vel_gain=len(joints) * [1.0],
-            max_force=len(joints) * [25.0],  # todo: limit?
+            max_force=len(joints) * [5.0],  # todo: limit?
         )
 
         gripper = JointController.make(

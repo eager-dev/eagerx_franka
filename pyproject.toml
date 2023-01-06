@@ -21,6 +21,7 @@ urdf-parser-py = "^0.0.4"
 moviepy = "^1.0.3"
 numpy = "<1.20.0"
 roboticstoolbox-python = "^1.0.3"
+sb3-contrib = "^1.6.2"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"

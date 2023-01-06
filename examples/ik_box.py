@@ -150,7 +150,7 @@ if __name__ == "__main__":
     graph.add(goal)
 
     # Circular goal
-    x, y, z = 0.50, 0.0, 0.05
+    x, y, z = 0.45, 0.0, 0.05
     dx, dy = 0.1, 0.20
     solid.states.lateral_friction.space.update(low=0.1, high=0.4)
     solid.states.orientation.space.update(low=[-1, -1, 0, 0], high=[1, 1, 0, 0])
@@ -191,6 +191,8 @@ if __name__ == "__main__":
         np.pi,
         max_dxyz=[0.2, 0.2, 0.2],
         max_dyaw=2 * np.pi / 2,
+        eomg=0.01,
+        ev=0.01,
     )
     graph.add(ik)
 

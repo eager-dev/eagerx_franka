@@ -1152,6 +1152,17 @@ optional = false
 python-versions = ">=3.6.0"
 
 [[package]]
+name = "sb3-contrib"
+version = "1.6.2"
+description = "Contrib package of Stable Baselines3, experimental code."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+stable-baselines3 = ">=1.6.2"
+
+[[package]]
 name = "scipy"
 version = "1.9.3"
 description = "Fundamental algorithms for scientific computing in Python"
@@ -1603,7 +1614,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "cd8fdb58c4234c6902aeea653e2a6af3ec40c23a46bc53ba25c235bc37ce2aac"
+content-hash = "d8424a5a20ca9afdd3ba1dc5d193fcfacd189d7669605534ec2d4a952dc9842b"
 
 [metadata.files]
 absl-py = [
@@ -2635,6 +2646,10 @@ rtb-data = [
 rx = [
     {file = "Rx-3.2.0-py3-none-any.whl", hash = "sha256:922c5f4edb3aa1beaa47bf61d65d5380011ff6adcd527f26377d05cb73ed8ec8"},
     {file = "Rx-3.2.0.tar.gz", hash = "sha256:b657ca2b45aa485da2f7dcfd09fac2e554f7ac51ff3c2f8f2ff962ecd963d91c"},
+]
+sb3-contrib = [
+    {file = "sb3_contrib-1.6.2-py3-none-any.whl", hash = "sha256:516b04c8cbaddd3bcf182c6bc36f5676b43060bb0d85d11250ab89ffac6e184e"},
+    {file = "sb3_contrib-1.6.2.tar.gz", hash = "sha256:51f11e94c70a01612d4f63c88fccd2f4e81f267a550ede3aadba7f2a1a8f5acb"},
 ]
 scipy = [
     {file = "scipy-1.9.3-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:1884b66a54887e21addf9c16fb588720a8309a57b2e258ae1c7986d4444d3bc0"},
