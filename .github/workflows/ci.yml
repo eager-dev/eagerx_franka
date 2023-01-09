@@ -14,7 +14,7 @@ on:
 jobs:
   test:
     # Skip CI if [ci skip] in the commit message
-    if: "! contains(toJSON(github.event.commits.*.message), '[ci skip]')"
+    if: "! contains(toJSON(github.event.commits.*.message), '[ci skip]')  && !contains(github.event.head_commit.message, 'ci: updated coverage.svg')"
     strategy:
       fail-fast: true
       matrix:
@@ -97,8 +97,8 @@ jobs:
       #----------------------------------------------
       - uses: actions/upload-artifact@v3
         with:
-          name: 'coverage'
-          path: coverage.xml
+          name: '.coverage'
+          path: .coverage
   release:
     needs: test
     # https://github.community/t/how-do-i-specify-job-dependency-running-in-another-workflow/16482
@@ -122,7 +122,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
-          name: 'coverage'
+          name: '.coverage'
           path: .
       #-----------------------------------------------
       #             Create coverage badge
@@ -140,6 +140,12 @@ jobs:
           git config --global user.email "action@github.com"
           git add coverage.svg
           git commit -m "ci: updated coverage.svg"
+      - name: Push changes
+        if: steps.changed_files.outputs.files_changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
       #-----------------------------------------------
       #   Publish to PYPI in case of a new version
       #-----------------------------------------------
