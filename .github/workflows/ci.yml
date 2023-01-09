@@ -29,6 +29,7 @@ jobs:
       #----------------------------------------------
       - name: Check out repository
         uses: actions/checkout@v2
+        token: ${{ secrets.GH_TOKEN }}
       - name: Set up python ${{ matrix.python-version }}
         id: setup-python
         uses: actions/setup-python@v2
@@ -99,24 +100,13 @@ jobs:
         run: |
           source .venv/bin/activate
           genbadge coverage -i coverage.xml -o coverage.svg
-      - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v12
-        id: changed_files
-        with:
-          files: coverage.svg
-      - name: Commit files
-        if: steps.changed_files.outputs.files_changed == 'true'
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "action@github.com"
-          git add coverage.svg
-          git commit -m "[ci skip] updated coverage.svg"
-      - name: Push changes
-        if: steps.changed_files.outputs.files_changed == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          branch: ${{ github.ref }}
+      - - name: Add & Commit
+          uses: EndBug/add-and-commit@v9.1.1
+          with:
+            author_name: ${{ github.actor }}
+            author_email: ${{ github.actor }}@users.noreply.github.com
+            message: "[ci skip] Update coverage badge"
+            add: "coverage.svg"
   release:
     needs: test
     # https://github.community/t/how-do-i-specify-job-dependency-running-in-another-workflow/16482
