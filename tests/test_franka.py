@@ -115,7 +115,7 @@ def velocity_control(_graph, _arm, source_goal, safe_rate):
 
 @pytest.mark.timeout(60)
 @pytest.mark.parametrize("eps, num_steps, sync, rtf, p", [(3, 20, True, 0, NP), (3, 20, True, 0, ENV)])
-def test_interbotix(eps, num_steps, sync, rtf, p):
+def test_franka(eps, num_steps, sync, rtf, p):
     eagerx.set_log_level(eagerx.WARN)
 
     # Define unique name for test environment
@@ -270,5 +270,5 @@ def test_interbotix(eps, num_steps, sync, rtf, p):
 
 
 if __name__ == "__main__":
-    test_interbotix(3, 20, True, 0, NP)
-    test_interbotix(3, 20, True, 0, ENV)
+    test_franka(3, 20, True, 0, NP)
+    test_franka(3, 20, True, 0, ENV)
