@@ -95,7 +95,7 @@ jobs:
   release:
     needs: test
     # https://github.community/t/how-do-i-specify-job-dependency-running-in-another-workflow/16482
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, 'chore(release):' && !contains(github.event.head_commit.message, 'updated coverage.svg')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, 'chore(release):') && !contains(github.event.head_commit.message, 'updated coverage.svg')
     runs-on: ubuntu-latest
     steps:
       #----------------------------------------------
