@@ -9,11 +9,10 @@ repository = "https://github.com/eager-dev/eagerx_franka"
 documentation = "https://eagerx.readthedocs.io/en/master/"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<3.11"
 eagerx = "^0.1.33"
 eagerx-pybullet = "^0.1.11"
 eagerx-utility = "^0.0.2"
-scipy = "^1.9.3"
 modern-robotics = "^1.1.0"
 stable-baselines3 = "^1.6.2"
 tensorboard = "^2.11.0"
@@ -22,6 +21,7 @@ moviepy = "^1.0.3"
 numpy = "<1.20.0"
 roboticstoolbox-python = "^1.0.3"
 sb3-contrib = "^1.6.2"
+optuna = "^3.0.5"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
@@ -29,6 +29,7 @@ pytest = "^7.0"
 pytest-cov = "^4.0.0"
 flake8 = ">=3"
 flake8-bugbear = "^22.3.23"
+genbadge = "^1.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

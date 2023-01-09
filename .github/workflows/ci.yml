@@ -95,7 +95,9 @@ jobs:
       #-----------------------------------------------
       #             Create coverage badge
       #-----------------------------------------------
-      - uses: tj-actions/coverage-badge-py@v1.8
+      - name: Create coverage badge
+        run: |
+          genbadge coverage -i coverage.xml -o coverage.svg
       - name: Verify Changed files
         uses: tj-actions/verify-changed-files@v12
         id: changed_files
