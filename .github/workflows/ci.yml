@@ -92,10 +92,40 @@ jobs:
         run: |
           source .venv/bin/activate
           make pytest
+  coverage-badge:
+    needs: test
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Coverage Badge
+        uses: tj-actions/coverage-badge-py@v1.8
+
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v12
+        id: changed_files
+        with:
+          files: coverage.svg
+
+      - name: Commit files
+        if: steps.changed_files.outputs.files_changed == 'true'
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          git add coverage.svg
+          git commit -m "ci: updated coverage.svg"
+
+    - name: Push changes
+      if: steps.changed_files.outputs.files_changed == 'true'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
   release:
     needs: test
     # https://github.community/t/how-do-i-specify-job-dependency-running-in-another-workflow/16482
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, 'chore(release):')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && !contains(github.event.head_commit.message, 'chore(release):' && !contains(github.event.head_commit.message, 'updated coverage.svg')
     runs-on: ubuntu-latest
     steps:
       #----------------------------------------------
@@ -109,6 +139,30 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
+      #-----------------------------------------------
+      #             Create coverage badge
+      #-----------------------------------------------
+      - uses: tj-actions/coverage-badge-py@v1.8
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v12
+        id: changed_files
+        with:
+          files: coverage.svg
+
+      - name: Commit files
+        if: steps.changed_files.outputs.files_changed == 'true'
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          git add coverage.svg
+          git commit -m "ci: updated coverage.svg"
+
+      - name: Push changes
+        if: steps.changed_files.outputs.files_changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
       #-----------------------------------------------
       #   Publish to PYPI in case of a new version
       #-----------------------------------------------
