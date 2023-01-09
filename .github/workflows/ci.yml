@@ -92,6 +92,13 @@ jobs:
         run: |
           source .venv/bin/activate
           make pytest
+      #----------------------------------------------
+      # Save code coverage
+      #----------------------------------------------
+      - uses: actions/upload-artifact@v3
+        with:
+          name: 'coverage'
+          path: coverage.xml
   release:
     needs: test
     # https://github.community/t/how-do-i-specify-job-dependency-running-in-another-workflow/16482
@@ -109,6 +116,14 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
+      #----------------------------------------------
+      #               Download coverage
+      #----------------------------------------------
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: 'coverage'
+          path: .
       #-----------------------------------------------
       #             Create coverage badge
       #-----------------------------------------------
