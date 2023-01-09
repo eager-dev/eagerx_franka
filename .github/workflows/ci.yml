@@ -14,7 +14,7 @@ on:
 jobs:
   test:
     # Skip CI if [ci skip] in the commit message
-    if: "! contains(toJSON(github.event.commits.*.message), '[ci skip]')  && !contains(github.event.head_commit.message, 'ci: updated coverage.svg')"
+    if: "! contains(toJSON(github.event.commits.*.message), '[ci skip]')"
     strategy:
       fail-fast: true
       matrix:
@@ -92,13 +92,28 @@ jobs:
         run: |
           source .venv/bin/activate
           make pytest
-      #----------------------------------------------
-      # Save code coverage
-      #----------------------------------------------
-      - uses: actions/upload-artifact@v3
+      #-----------------------------------------------
+      #             Create coverage badge
+      #-----------------------------------------------
+      - uses: tj-actions/coverage-badge-py@v1.8
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v12
+        id: changed_files
         with:
-          name: '.coverage'
-          path: .coverage
+          files: coverage.svg
+      - name: Commit files
+        if: steps.changed_files.outputs.files_changed == 'true'
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          git add coverage.svg
+          git commit -m "[ci skip] updated coverage.svg"
+      - name: Push changes
+        if: steps.changed_files.outputs.files_changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
   release:
     needs: test
     # https://github.community/t/how-do-i-specify-job-dependency-running-in-another-workflow/16482
@@ -116,42 +131,14 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
-      #----------------------------------------------
-      #               Download coverage
-      #----------------------------------------------
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: '.coverage'
-          path: .
-      #-----------------------------------------------
-      #             Create coverage badge
-      #-----------------------------------------------
-      - uses: tj-actions/coverage-badge-py@v1.8
-      - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v12
-        id: changed_files
-        with:
-          files: coverage.svg
-      - name: Commit files
-        if: steps.changed_files.outputs.files_changed == 'true'
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "action@github.com"
-          git add coverage.svg
-          git commit -m "ci: updated coverage.svg"
-      - name: Push changes
-        if: steps.changed_files.outputs.files_changed == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
       #-----------------------------------------------
       #   Publish to PYPI in case of a new version
       #-----------------------------------------------
       - name: Semantic Release
         run: |
           pip install python-semantic-release
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
           semantic-release publish -D commit_author="github-actions <action@github.com>"
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
