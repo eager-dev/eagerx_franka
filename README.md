@@ -1,4 +1,4 @@
-## eagerx_franka Package
+# `eagerx_franka` package
 
 [![license](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![codestyle](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -6,7 +6,7 @@
 [![Test Coverage](coverage.svg)](https://github.com/eager-dev/eagerx_franka/actions/workflows/ci.yml)
 
 
-What is the eagerx_franka package
+What is the `eagerx_franka` package
 ---------------------------------
 
 This repository interfaces franka robots with EAGERx. 
