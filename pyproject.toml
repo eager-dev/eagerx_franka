@@ -18,7 +18,7 @@ stable-baselines3 = "^1.6.2"
 tensorboard = "^2.11.0"
 urdf-parser-py = "^0.0.4"
 moviepy = "^1.0.3"
-numpy = "<1.20.0"
+numpy = "<1.25.0"
 roboticstoolbox-python = "^1.0.3"
 
 [tool.poetry.dev-dependencies]
