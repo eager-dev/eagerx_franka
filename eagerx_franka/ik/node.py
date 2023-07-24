@@ -132,89 +132,89 @@ class EndEffectorDownward(eagerx.Node):
             target = current
             dtarget = current * 0
         return dict(target=target, dtarget=dtarget)
-
-
-class PandaEndEffectorDownward(eagerx.Node):
-    @classmethod
-    def make(
-        cls,
-        name: str,
-        rate: float,
-        max_dxyz: t.List[float],
-        max_dyaw: float,
-        min_z: float = 0.03,
-        process: int = eagerx.NEW_PROCESS,
-    ) -> NodeSpec:
-        """
-        Calculate desired joint positions based on delta pose of the end effector in task space using inverse kinematics.
-
-        :param name: Node name.
-        :param rate: Rate at which callback is called.
-        :param max_dxyz: Maximum delta position in xyz [m/s].
-        :param max_dyaw: Maximum delta rotation in yaw [rad/s].
-        :param min_z: Minimum z position of the end-effector's link (cog?) [m].
-        :param process: {0: NEW_PROCESS, 1: ENVIRONMENT, 2: ENGINE, 3: EXTERNAL}.
-        :return: Parameter specification of the node.
-        """
-        spec = cls.get_specification()
-
-        # Modify default node params
-        spec.config.name = name
-        spec.config.rate = rate
-        spec.config.process = process
-        spec.config.inputs = ["dxyz", "dyaw", "current", "xyz", "orn"]
-        spec.config.outputs = ["target", "dtarget"]
-
-        # Modify custom node params
-        spec.config.max_dxyz = max_dxyz
-        spec.config.max_dyaw = max_dyaw
-        spec.config.min_z = min_z
-
-        # Add converter & space
-        spec.inputs.dxyz.space.update(low=[-i for i in max_dxyz], high=max_dxyz)
-        spec.inputs.dyaw.space.update(low=-max_dyaw, high=max_dyaw)
-        return spec
-
-    def initialize(self, spec: NodeSpec):
-        np.set_printoptions(precision=2, suppress=True)
-        self.max_dxyz = np.array(spec.config.max_dxyz, dtype="float32")
-        self.max_dyaw = np.array(spec.config.max_dyaw, dtype="float32")
-        self.min_z = spec.config.min_z
-        self.robot = rtb.models.Panda()
-
-    @register.states()
-    def reset(self):
-        pass
-
-    @register.inputs(
-        dxyz=Space(shape=(3,), dtype="float32"),
-        xyz=Space(shape=(3,), dtype="float32"),
-        orn=Space(shape=(4,), dtype="float32"),
-        dyaw=Space(shape=(), dtype="float32"),
-        current=Space(dtype="float32"),
-    )
-    @register.outputs(target=Space(dtype="float32"), dtarget=Space(dtype="float32"))
-    def callback(self, t_n: float, dxyz: Msg, xyz: Msg, orn: Msg, dyaw: Msg, current: Msg):
-        dxyz = dxyz.msgs[-1]
-        xyz = xyz.msgs[-1]
-        orn = orn.msgs[-1]
-        dyaw = dyaw.msgs[-1]
-        current = current.msgs[-1]
-
-        # Limit dz
-        dz = dxyz[-1]
-        z = xyz[-1]
-        dxyz[-1] = max(dz, self.max_dxyz[-1] * (-1 + 1 / np.exp(max(0, 10 * (z - self.min_z)))))
-
-        # Calculate the target pose
-        rot_ee2b = R.from_quat(orn).as_matrix()
-        yaw = np.arctan2(rot_ee2b[0, 1], rot_ee2b[0, 0])
-        yaw_target = (yaw + dyaw / self.rate) % (2 * np.pi)
-
-        trans = xyz + dxyz / self.rate  # Scale delta position with rate
-
-        tep = SE3.Trans(trans) * SE3.RPY(yaw_target, np.pi, 0, order="zyx")
-        sol = self.robot.ik_lm_chan(tep)
-        target = np.asarray(sol[0], dtype="float32")
-        dtarget = (target - current) * self.rate  # [rad/sec]
-        return dict(target=target, dtarget=dtarget)
+#
+#
+# class PandaEndEffectorDownward(eagerx.Node):
+#     @classmethod
+#     def make(
+#         cls,
+#         name: str,
+#         rate: float,
+#         max_dxyz: t.List[float],
+#         max_dyaw: float,
+#         min_z: float = 0.03,
+#         process: int = eagerx.NEW_PROCESS,
+#     ) -> NodeSpec:
+#         """
+#         Calculate desired joint positions based on delta pose of the end effector in task space using inverse kinematics.
+#
+#         :param name: Node name.
+#         :param rate: Rate at which callback is called.
+#         :param max_dxyz: Maximum delta position in xyz [m/s].
+#         :param max_dyaw: Maximum delta rotation in yaw [rad/s].
+#         :param min_z: Minimum z position of the end-effector's link (cog?) [m].
+#         :param process: {0: NEW_PROCESS, 1: ENVIRONMENT, 2: ENGINE, 3: EXTERNAL}.
+#         :return: Parameter specification of the node.
+#         """
+#         spec = cls.get_specification()
+#
+#         # Modify default node params
+#         spec.config.name = name
+#         spec.config.rate = rate
+#         spec.config.process = process
+#         spec.config.inputs = ["dxyz", "dyaw", "current", "xyz", "orn"]
+#         spec.config.outputs = ["target", "dtarget"]
+#
+#         # Modify custom node params
+#         spec.config.max_dxyz = max_dxyz
+#         spec.config.max_dyaw = max_dyaw
+#         spec.config.min_z = min_z
+#
+#         # Add converter & space
+#         spec.inputs.dxyz.space.update(low=[-i for i in max_dxyz], high=max_dxyz)
+#         spec.inputs.dyaw.space.update(low=-max_dyaw, high=max_dyaw)
+#         return spec
+#
+#     def initialize(self, spec: NodeSpec):
+#         np.set_printoptions(precision=2, suppress=True)
+#         self.max_dxyz = np.array(spec.config.max_dxyz, dtype="float32")
+#         self.max_dyaw = np.array(spec.config.max_dyaw, dtype="float32")
+#         self.min_z = spec.config.min_z
+#         self.robot = rtb.models.Panda()
+#
+#     @register.states()
+#     def reset(self):
+#         pass
+#
+#     @register.inputs(
+#         dxyz=Space(shape=(3,), dtype="float32"),
+#         xyz=Space(shape=(3,), dtype="float32"),
+#         orn=Space(shape=(4,), dtype="float32"),
+#         dyaw=Space(shape=(), dtype="float32"),
+#         current=Space(dtype="float32"),
+#     )
+#     @register.outputs(target=Space(dtype="float32"), dtarget=Space(dtype="float32"))
+#     def callback(self, t_n: float, dxyz: Msg, xyz: Msg, orn: Msg, dyaw: Msg, current: Msg):
+#         dxyz = dxyz.msgs[-1]
+#         xyz = xyz.msgs[-1]
+#         orn = orn.msgs[-1]
+#         dyaw = dyaw.msgs[-1]
+#         current = current.msgs[-1]
+#
+#         # Limit dz
+#         dz = dxyz[-1]
+#         z = xyz[-1]
+#         dxyz[-1] = max(dz, self.max_dxyz[-1] * (-1 + 1 / np.exp(max(0, 10 * (z - self.min_z)))))
+#
+#         # Calculate the target pose
+#         rot_ee2b = R.from_quat(orn).as_matrix()
+#         yaw = np.arctan2(rot_ee2b[0, 1], rot_ee2b[0, 0])
+#         yaw_target = (yaw + dyaw / self.rate) % (2 * np.pi)
+#
+#         trans = xyz + dxyz / self.rate  # Scale delta position with rate
+#
+#         tep = SE3.Trans(trans) * SE3.RPY(yaw_target, np.pi, 0, order="zyx")
+#         sol = self.robot.ik_lm_chan(tep)
+#         target = np.asarray(sol[0], dtype="float32")
+#         dtarget = (target - current) * self.rate  # [rad/sec]
+#         return dict(target=target, dtarget=dtarget)
