@@ -1,7 +1,7 @@
 import eagerx
 import eagerx_franka
+from eagerx_franka import utils
 import numpy as np
-import gym.wrappers as w
 import stable_baselines3 as sb
 from datetime import datetime
 import os
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     excl_z = False
     USE_POS_CONTROL = False
     MUST_LOG = True
-    MUST_TEST = False
+    MUST_TEST = True
 
     # Initialize empty graph
     graph = eagerx.Graph.create()
@@ -209,7 +209,7 @@ if __name__ == "__main__":
     graph.connect(source=solid.sensors.position, observation="pos")
     graph.connect(source=solid.sensors.yaw, observation="yaw")
     graph.connect(source=goal.sensors.position, observation="pos_desired")
-    graph.connect(source=goal.sensors.yaw, observation="yaw_desired")
+
     # Connect IK
     graph.connect(source=arm.sensors.position, target=ik.inputs.current)
     graph.connect(source=arm.sensors.ee_pos, target=ik.inputs.xyz)
@@ -277,7 +277,7 @@ if __name__ == "__main__":
                 max_steps=int(T_max * rate),
             )
             goal_env = GoalArmEnv(env, add_bias=add_bias)
-            env = w.rescale_action.RescaleAction(goal_env, min_action=-1.0, max_action=1.0)
+            env = utils.RescaleAction(goal_env, min_action=-1.0, max_action=1.0)
             return env
 
         return _init
@@ -313,23 +313,20 @@ if __name__ == "__main__":
             done = np.array([done], dtype="bool") if isinstance(done, bool) else done
             while not done.all():
                 action = train_env.action_space.sample()
-                obs, reward, done, info = train_env.step(action)
+                obs, reward, terminated, truncated, info = train_env.step(action)
 
     # Create experiment directory
     total_steps = 2_500_000
+    goal_selection_strategy = "future"  # equivalent to GoalSelectionStrategy.FUTURE
     model = sb.SAC(
         "MultiInputPolicy",
         train_env,
         replay_buffer_class=sb.HerReplayBuffer,
+        # Parameters for HER
         replay_buffer_kwargs=dict(
             n_sampled_goal=4,
-            goal_selection_strategy="future",
-            # IMPORTANT: because the env is not wrapped with a TimeLimit wrapper
-            # we have to manually specify the max number of steps per episode
-            max_episode_length=int(T_max * rate),
-            online_sampling=True,
+            goal_selection_strategy=goal_selection_strategy,
         ),
-        device="cuda",
         verbose=1,
         tensorboard_log=LOG_DIR,
     )

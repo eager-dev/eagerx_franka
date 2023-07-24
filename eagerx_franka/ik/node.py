@@ -5,8 +5,9 @@ from eagerx import Space
 from eagerx.core.specs import NodeSpec
 import eagerx.core.register as register
 from eagerx.utils.utils import Msg
-import roboticstoolbox as rtb
-from spatialmath import SE3
+
+# import roboticstoolbox as rtb
+# from spatialmath import SE3
 from scipy.spatial.transform import Rotation as R
 import modern_robotics as mr
 

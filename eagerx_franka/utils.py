@@ -2,6 +2,7 @@ import os
 import eagerx_franka
 import yaml
 from eagerx_utility.utils import launch_node
+import gymnasium as gym
 
 
 def get_joint_limits(robot_model: str, joint_limits: str):
@@ -43,3 +44,14 @@ def generate_urdf(
     rosparam.upload_params(urdf_key, urdf_sbtd)
 
     return urdf_key
+
+
+def RescaleAction(env, min_action, max_action):
+    env = gym.wrappers.rescale_action.RescaleAction(env, min_action, max_action)
+    env.action_space = gym.spaces.Box(
+        low=min_action,
+        high=max_action,
+        shape=env.action_space.shape,
+        dtype=env.action_space.dtype,
+    )
+    return env
