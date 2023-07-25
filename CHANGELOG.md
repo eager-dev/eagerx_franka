@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.4 (2023-07-25)
+
+### Fix
+
+* Gymnasium ([`6d50a03`](https://github.com/eager-dev/eagerx_franka/commit/6d50a032e61b623ca1ca535dda842d0ef9f6f452))
+* Refactor to gymnasium ([#28](https://github.com/eager-dev/eagerx_franka/issues/28)) ([`f5ef73b`](https://github.com/eager-dev/eagerx_franka/commit/f5ef73b8514c64bd9e5d265d8e093feb771d68fb))
+
 ## v0.0.3 (2023-02-09)
 ### Fix
 * Add assets folder to install dir ([`d30852b`](https://github.com/eager-dev/eagerx_franka/commit/d30852b675a217d46c3a85652d297727e6d2ff33))
