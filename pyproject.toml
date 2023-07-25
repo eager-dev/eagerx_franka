@@ -18,7 +18,7 @@ modern-robotics = "^1.1.0"
 urdf-parser-py = "^0.0.4"
 
 [tool.poetry.dev-dependencies]
-black = "^22.1.0"
+black = "^23.7.0"
 pytest = "^7.0"
 pytest-cov = "^4.0.0"
 flake8 = ">=3"
