@@ -257,10 +257,10 @@ def test_franka(eps, num_steps, sync, rtf, p):
     # Evaluate for 30 seconds in simulation
     _, action = env.reset(), env.action_space.sample()
     for i in range(3):
-        obs, reward, done, info = env.step(action)
-        if done:
+        obs, reward, terminated, truncated, info = env.step(action)
+        if terminated:
             _, action = env.reset(), env.action_space.sample()
-            _rgb = env.render("rgb_array")
+            _rgb = env.render()
             print(f"Episode {i}")
     print("\n[Finished]")
 

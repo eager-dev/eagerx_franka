@@ -22,7 +22,7 @@
       <geometry>
         <mesh filename="package://meshes/collision/link0.obj"/>
       </geometry>
-      <material name="panda_white"/>
+<!--      <material name="panda_white"/>-->
     </collision>
   </link>
   <link name="panda_link1">
@@ -41,7 +41,7 @@
       <geometry>
         <mesh filename="package://meshes/collision/link1.obj"/>
       </geometry>
-      <material name="panda_white"/>
+<!--      <material name="panda_white"/>-->
     </collision>
   </link>
   <joint name="panda_joint1" type="revolute">
@@ -68,7 +68,7 @@
       <geometry>
         <mesh filename="package://meshes/collision/link2.obj"/>
       </geometry>
-      <material name="panda_white"/>
+<!--      <material name="panda_white"/>-->
     </collision>
   </link>
   <joint name="panda_joint2" type="revolute">
@@ -123,7 +123,7 @@
       <geometry>
         <mesh filename="package://meshes/collision/link4.obj"/>
       </geometry>
-      <material name="panda_white"/>
+<!--      <material name="panda_white"/>-->
     </collision>
   </link>
   <joint name="panda_joint4" type="revolute">
@@ -150,7 +150,7 @@
       <geometry>
         <mesh filename="package://meshes/collision/link5.obj"/>
       </geometry>
-      <material name="panda_white"/>
+<!--      <material name="panda_white"/>-->
     </collision>
   </link>
   <joint name="panda_joint5" type="revolute">
@@ -177,7 +177,7 @@
       <geometry>
         <mesh filename="package://meshes/collision/link6.obj"/>
       </geometry>
-      <material name="panda_white"/>
+<!--      <material name="panda_white"/>-->
     </collision>
   </link>
   <joint name="panda_joint6" type="revolute">
@@ -204,7 +204,7 @@
       <geometry>
         <mesh filename="package://meshes/collision/link7.obj"/>
       </geometry>
-      <material name="panda_white"/>
+<!--      <material name="panda_white"/>-->
     </collision>
   </link>
   <joint name="panda_joint7" type="revolute">
@@ -249,17 +249,17 @@
       <geometry>
         <mesh filename="package://meshes/collision/hand.obj"/>
       </geometry>
-      <material name="panda_white"/>
+<!--      <material name="panda_white"/>-->
     </collision>
   </link>
   <link name="panda_leftfinger">
-       <contact>
-      <friction_anchor/>
-      <stiffness value="30000.0"/>
-      <damping value="1000.0"/>
-      <spinning_friction value="0.1"/>
-      <lateral_friction value="1.0"/>
-    </contact>
+<!--       <contact>-->
+<!--      <friction_anchor/>-->
+<!--      <stiffness value="30000.0"/>-->
+<!--      <damping value="1000.0"/>-->
+<!--      <spinning_friction value="0.1"/>-->
+<!--      <lateral_friction value="1.0"/>-->
+<!--    </contact>-->
   	<inertial>
       <origin rpy="0 0 0" xyz="0 0.01 0.02"/>
        <mass value="0.1"/>
@@ -275,17 +275,17 @@
       <geometry>
         <mesh filename="package://meshes/collision/finger.obj"/>
       </geometry>
-      <material name="panda_white"/>
+<!--      <material name="panda_white"/>-->
     </collision>
   </link>
   <link name="panda_rightfinger">
-        <contact>
-      <friction_anchor/>
-      <stiffness value="30000.0"/>
-      <damping value="1000.0"/>
-      <spinning_friction value="0.1"/>
-      <lateral_friction value="1.0"/>
-    </contact>
+<!--        <contact>-->
+<!--      <friction_anchor/>-->
+<!--      <stiffness value="30000.0"/>-->
+<!--      <damping value="1000.0"/>-->
+<!--      <spinning_friction value="0.1"/>-->
+<!--      <lateral_friction value="1.0"/>-->
+<!--    </contact>-->
 
   	<inertial>
       <origin rpy="0 0 0" xyz="0 -0.01 0.02"/>
@@ -304,7 +304,7 @@
       <geometry>
         <mesh filename="package://meshes/collision/finger.obj"/>
       </geometry>
-      <material name="panda_white"/>
+<!--      <material name="panda_white"/>-->
     </collision>
   </link>
   <joint name="panda_finger_joint1" type="prismatic">
