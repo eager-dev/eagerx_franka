@@ -28,8 +28,10 @@ jobs:
       #       check-out repo and set-up python
       #----------------------------------------------
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GH_TOKEN }}
       - name: Set up python ${{ matrix.python-version }}
         id: setup-python
@@ -105,7 +107,7 @@ jobs:
         run: |
           make coverage-badge
       - name: Add & Commit
-        uses: EndBug/add-and-commit@v9.1.3
+        uses: EndBug/add-and-commit@v9
         with:
           author_name: ${{ github.actor }}
           author_email: ${{ github.actor }}@users.noreply.github.com
