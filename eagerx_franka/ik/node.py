@@ -132,6 +132,8 @@ class EndEffectorDownward(eagerx.Node):
             target = current
             dtarget = current * 0
         return dict(target=target, dtarget=dtarget)
+
+
 #
 #
 # class PandaEndEffectorDownward(eagerx.Node):
