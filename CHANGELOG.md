@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.5 (2023-08-24)
+
+### Fix
+
+* Assets folder not included ([`9a4dd59`](https://github.com/eager-dev/eagerx_franka/commit/9a4dd595809e37c668e6bcb5b71bce686e4807e8))
+
 ## v0.0.4 (2023-07-25)
 
 ### Fix
