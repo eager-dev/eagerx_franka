@@ -7,7 +7,6 @@ authors = ["Jelle Luijkx <j.d.luijkx@tudelft.nl>", "Bas van der Heijden <d.s.van
 homepage = "https://github.com/eager-dev/eagerx_franka"
 repository = "https://github.com/eager-dev/eagerx_franka"
 documentation = "https://eagerx.readthedocs.io/en/master/"
-include = ["assets"]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"

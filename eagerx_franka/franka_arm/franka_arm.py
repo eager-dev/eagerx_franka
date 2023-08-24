@@ -61,7 +61,7 @@ class FrankaArm(eagerx.Object):
         if regenerate_urdf:
             urdf = URDF.from_parameter_server(generate_urdf(robot_type, ns="pybullet_urdf"))
         else:
-            module_path = os.path.dirname(eagerx_franka.__file__) + "/../assets/"
+            module_path = os.path.dirname(eagerx_franka.__file__) + "/assets/"
             urdf = URDF.from_xml_file(module_path + "franka_panda/panda.urdf")
 
         gripper_names = [joint.name for joint in urdf.joints if "finger" in joint.name]
@@ -136,7 +136,7 @@ class FrankaArm(eagerx.Object):
         """Engine-specific implementation (Pybullet) of the object."""
         # Set object arguments (as registered per register.engine_params(..) above the engine.add_object(...) method.)
 
-        module_path = os.path.dirname(eagerx_franka.__file__) + "/../assets/franka_panda/"
+        module_path = os.path.dirname(eagerx_franka.__file__) + "/assets/franka_panda/"
         urdf = spec.config.urdf
         if not spec.config.regenerate_urdf:
             urdf_sbtd = urdf.replace("package://", module_path)
