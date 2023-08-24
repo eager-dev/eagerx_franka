@@ -9,7 +9,7 @@ import numpy as np
 
 NP = eagerx.process.NEW_PROCESS
 ENV = eagerx.process.ENVIRONMENT
-PACKAGE_PATH = os.path.dirname(eagerx_franka.__file__) + "/../assets/franka_panda/"
+PACKAGE_PATH = os.path.dirname(eagerx_franka.__file__) + "/assets/franka_panda/"
 
 cam_intrinsics = {
     "image_width": 640,

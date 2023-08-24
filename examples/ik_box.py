@@ -89,7 +89,7 @@ def velocity_control(_graph, _arm, source_goal, safe_rate):
 
 NAME = "HER_force_torque"
 LOG_DIR = os.path.dirname(eagerx_franka.__file__) + f"/../logs/{NAME}_{datetime.today().strftime('%Y-%m-%d-%H%M')}"
-PACKAGE_PATH = os.path.dirname(eagerx_franka.__file__) + "/../assets/franka_panda/"
+PACKAGE_PATH = os.path.dirname(eagerx_franka.__file__) + "/assets/franka_panda/"
 
 
 if __name__ == "__main__":
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     import yaml
 
     urdf_path = os.path.dirname(eagerx_franka.__file__) + "/solid/assets/"
-    cam_path = os.path.dirname(eagerx_franka.__file__) + "/../assets/calibrations"
+    cam_path = os.path.dirname(eagerx_franka.__file__) + "/assets/calibrations"
     cam_name = "logitech_c170"
     with open(f"{cam_path}/{cam_name}.yaml", "r") as f:
         cam_intrinsics = yaml.safe_load(f)
