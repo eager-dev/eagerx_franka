@@ -18,7 +18,7 @@ urdf-parser-py = "^0.0.4"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
-pytest = "^7.0"
+pytest = "^7.4"
 pytest-cov = "^4.0.0"
 flake8 = ">=3"
 flake8-bugbear = "^22.3.23"
