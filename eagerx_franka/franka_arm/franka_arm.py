@@ -261,7 +261,20 @@ class FrankaArm(eagerx.Object):
         gripper.inputs.action.processor = MirrorAction.make(index=0, constant=constant, scale=scale)
 
         # Connect all engine nodes
-        graph.add([pos_sensor, vel_sensor, ft_sensor, ee_pos_sensor, ee_orn_sensor, gripper_sensor, pos_control, vel_control, gripper, moveit_to])
+        graph.add(
+            [
+                pos_sensor,
+                vel_sensor,
+                ft_sensor,
+                ee_pos_sensor,
+                ee_orn_sensor,
+                gripper_sensor,
+                pos_control,
+                vel_control,
+                gripper,
+                moveit_to,
+            ]
+        )
         graph.connect(source=pos_sensor.outputs.obs, sensor="position")
         graph.connect(source=vel_sensor.outputs.obs, sensor="velocity")
         graph.connect(source=ft_sensor.outputs.obs, sensor="force_torque")
