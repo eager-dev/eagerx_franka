@@ -253,7 +253,7 @@ class FrankaArm(eagerx.Object):
             pos_gain=len(joints) * [0.5],
             vel_gain=len(joints) * [1.0],
             max_vel=[0.5 * vel for vel in spec.config.vel_limit],
-            max_force=len(joints) * [1.0],
+            max_force=len(joints) * [5.0],
         )
 
         from eagerx_franka.franka_arm.processor import MirrorAction
