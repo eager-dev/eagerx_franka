@@ -21,13 +21,16 @@ class FrankaArm(eagerx.Object):
         position=Space(dtype="float32"),
         velocity=Space(dtype="float32"),
         force_torque=Space(low=-20, high=20, shape=(6,), dtype="float32"),
+        gripper_position=Space(dtype="float32"),
         ee_pos=Space(low=[-2, -2, 0], high=[2, 2, 2], dtype="float32"),
         ee_orn=Space(low=-1, high=1, shape=(4,), dtype="float32"),
+        moveit_status=Space(low=0, high=1, shape=(), dtype="int64"),
     )
     @register.actuators(
         pos_control=Space(dtype="float32"),
         vel_control=Space(dtype="float32"),
         gripper_control=Space(low=[0], high=[1], dtype="float32"),
+        moveit_to=Space(dtype="float32"),
     )
     @register.engine_states(
         position=Space(dtype="float32"),
@@ -108,12 +111,18 @@ class FrankaArm(eagerx.Object):
         spec.config.vel_limit = vel_limit
         spec.config.urdf = urdf.to_xml_string()
         spec.config.regenerate_urdf = regenerate_urdf
+        spec.config.sleep_positions = [0.0 for _j in joint_lower]
 
         # Set rates
         spec.sensors.position.rate = rate
         spec.sensors.velocity.rate = rate
         spec.sensors.force_torque.rate = rate
+        spec.sensors.gripper_position.rate = rate
+        spec.sensors.ee_pos.rate = rate
+        spec.sensors.ee_orn.rate = rate
+        spec.sensors.moveit_status.rate = rate
         spec.actuators.pos_control.rate = rate
+        spec.actuators.moveit_to.rate = rate
         spec.actuators.vel_control.rate = rate
         spec.actuators.gripper_control.rate = 1
 
@@ -122,8 +131,10 @@ class FrankaArm(eagerx.Object):
         spec.sensors.velocity.space.update(low=[-v for v in vel_limit], high=vel_limit)
         spec.sensors.ee_pos.rate = rate
         spec.sensors.ee_orn.rate = rate
+        spec.sensors.gripper_position.space.update(low=[gripper_lower[0] * 0.9], high=[gripper_upper[0] * 1.1])
         spec.actuators.pos_control.space.update(low=joint_lower, high=joint_upper)
         spec.actuators.vel_control.space.update(low=[-v for v in vel_limit], high=vel_limit)
+        spec.actuators.moveit_to.space.update(low=joint_lower, high=joint_upper)
         spec.states.position.space.update(low=[0.0 for _j in joint_lower], high=[0.0 for _j in joint_upper])
         spec.states.velocity.space.update(low=[0.0 for _j in joint_lower], high=[0.0 for _j in joint_upper])
         return spec
@@ -169,6 +180,7 @@ class FrankaArm(eagerx.Object):
 
         # Create sensor engine nodes
         from eagerx_pybullet.enginenodes import LinkSensor, JointSensor, JointController
+        from eagerx_franka.franka_arm.pybullet.enginenodes import MoveItController
 
         pos_sensor = JointSensor.make("pos_sensor", rate=spec.sensors.position.rate, process=2, joints=joints, mode="position")
         vel_sensor = JointSensor.make("vel_sensor", rate=spec.sensors.velocity.rate, process=2, joints=joints, mode="velocity")
@@ -179,6 +191,14 @@ class FrankaArm(eagerx.Object):
             joints=[spec.config.joint_names[-1]],
             mode="force_torque",
         )
+
+        gripper_sensor = JointSensor.make(
+            "gripper_sensor",
+            rate=spec.sensors.gripper_position.rate,
+            joints=spec.config.gripper_names[:1],
+            mode="position",
+        )
+
         ee_pos_sensor = LinkSensor.make(
             "ee_pos_sensor",
             rate=spec.sensors.ee_pos.rate,
@@ -224,17 +244,45 @@ class FrankaArm(eagerx.Object):
             vel_gain=[1.0, 1.0],
             max_force=[2.0, 2.0],
         )
+
+        moveit_to = MoveItController.make(
+            "moveit_to",
+            rate=spec.actuators.moveit_to.rate,
+            joints=joints,
+            vel_target=len(joints) * [0.0],
+            pos_gain=len(joints) * [0.5],
+            vel_gain=len(joints) * [1.0],
+            max_vel=[0.5 * vel for vel in spec.config.vel_limit],
+            max_force=len(joints) * [5.0],
+        )
+
         from eagerx_franka.franka_arm.processor import MirrorAction
 
         gripper.inputs.action.processor = MirrorAction.make(index=0, constant=constant, scale=scale)
 
         # Connect all engine nodes
-        graph.add([pos_sensor, vel_sensor, ft_sensor, ee_pos_sensor, ee_orn_sensor, pos_control, vel_control, gripper])
+        graph.add(
+            [
+                pos_sensor,
+                vel_sensor,
+                ft_sensor,
+                ee_pos_sensor,
+                ee_orn_sensor,
+                gripper_sensor,
+                pos_control,
+                vel_control,
+                gripper,
+                moveit_to,
+            ]
+        )
         graph.connect(source=pos_sensor.outputs.obs, sensor="position")
         graph.connect(source=vel_sensor.outputs.obs, sensor="velocity")
         graph.connect(source=ft_sensor.outputs.obs, sensor="force_torque")
         graph.connect(source=ee_pos_sensor.outputs.obs, sensor="ee_pos")
         graph.connect(source=ee_orn_sensor.outputs.obs, sensor="ee_orn")
+        graph.connect(source=gripper_sensor.outputs.obs, sensor="gripper_position")
+        graph.connect(source=moveit_to.outputs.status, sensor="moveit_status")
         graph.connect(actuator="pos_control", target=pos_control.inputs.action)
         graph.connect(actuator="vel_control", target=vel_control.inputs.action)
         graph.connect(actuator="gripper_control", target=gripper.inputs.action)
+        graph.connect(actuator="moveit_to", target=moveit_to.inputs.action)
