@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.6 (2023-11-14)
+
+### Fix
+
+* Add task space control in simulation ([`51cb1e1`](https://github.com/eager-dev/eagerx_franka/commit/51cb1e1e043a5da21b06565b238bc0d7b9fbb816))
+* Add move_it_to_ee_pose ([`0409a3e`](https://github.com/eager-dev/eagerx_franka/commit/0409a3e2bab1800e7d9fd4eef529e3838cd6be51))
+* Add taskspace control ([#35](https://github.com/eager-dev/eagerx_franka/issues/35)) ([`04f036e`](https://github.com/eager-dev/eagerx_franka/commit/04f036ed1061528b0973840f02c7af9049ad11ba))
+
 ## v0.0.5 (2023-08-24)
 
 ### Fix
