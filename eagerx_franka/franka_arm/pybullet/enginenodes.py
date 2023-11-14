@@ -1,8 +1,10 @@
+from dataclasses import dataclass
 import numpy as np
 from typing import Optional, List, Dict
 import pybullet
 
 # IMPORT EAGERX
+import eagerx
 from eagerx import Space
 from eagerx.core.specs import NodeSpec
 from eagerx.core.constants import process as p
@@ -217,3 +219,150 @@ class MoveItController(EngineNode):
             return obs
 
         return cb
+
+
+@dataclass
+class IndexedJointObject:
+    """Index of a robot joint and its name."""
+
+    joint_name: str
+    joint_uid: int
+
+
+def index_joints_and_ee_link(pb, physics_uid, robot_id, joints, ee_link):
+    """Map a list of joint names to indexed joints.
+    In other words, map named joints to the index used by
+    PyBullet to facilitate setting the configuration.
+    Parameters:
+      physics_uid: Index of the PyBullet physics server to use.
+      joints: list with joint name keys
+      ee_link: end effector link name
+    Returns: a list of IndexedJointObject
+    """
+    indexed_joints = []
+    indexed_ee_link = None
+    n = pb.getNumJoints(robot_id, physics_uid)
+    for joint_name in joints:
+        for i in range(n):
+            info = pb.getJointInfo(robot_id, i, physics_uid)
+            if info[12].decode("utf8") == ee_link:
+                indexed_ee_link = i
+            if joint_name == info[1].decode("utf-8"):
+                indexed_joints.append(IndexedJointObject(joint_name, i))
+                continue
+    assert len(joints) == len(indexed_joints), "Not all joints were found in the provided urdf."
+    assert indexed_ee_link is not None, "End effector link not found in the provided urdf."
+    return indexed_joints, indexed_ee_link
+
+
+class TaskSpaceControl(eagerx.EngineNode):
+    @classmethod
+    def make(
+        cls,
+        name: str,
+        rate: float,
+        joints: List[int],
+        upper: List[float],
+        lower: List[float],
+        ee_link: str,
+        rest_poses: List[float],
+        process: int = p.ENGINE,
+        color: str = "grey",
+    ) -> NodeSpec:
+        """
+        Filters goal joint positions that cause self-collisions or are below a certain height.
+        Also check velocity limits.
+
+        :param name: Node name
+        :param rate: Rate at which callback is called.
+        :param joints: joint names
+        :param upper: upper joint limits
+        :param lower: lower joint limits
+        :param ee_link: end effector link name
+        :param rest_poses: rest poses of the robot
+        :param process: {0: NEW_PROCESS, 1: ENVIRONMENT, 2: ENGINE, 3: EXTERNAL}
+        :param color: console color of logged messages. {'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'grey'}
+        :return: Node specification.
+        """
+        spec = cls.get_specification()
+
+        # Modify default node params
+        spec.config.name = name
+        spec.config.rate = rate
+        spec.config.process = process
+        spec.config.color = color
+        spec.config.inputs = ["tick", "ee_pose"]
+        spec.config.outputs = ["goal"]
+
+        # Modify custom node params
+        spec.config.joints = joints
+        spec.config.upper = upper
+        spec.config.lower = lower
+        spec.config.ee_link = ee_link
+        spec.config.rest_poses = rest_poses
+
+        # Add converter & space
+        spec.outputs.goal.space.update(low=lower, high=upper)
+        return spec
+
+    def initialize(self, spec: NodeSpec, simulator: Dict):
+        self.joints = spec.config.joints
+        self.upper = np.array(spec.config.upper, dtype="float")
+        self.lower = np.array(spec.config.lower, dtype="float")
+        self.ee_link = spec.config.ee_link
+        self.rest_poses = np.array(spec.config.rest_poses, dtype="float")
+
+        self.robot = simulator["object"]
+        self._p = simulator["client"]._client
+        self.physics_client_id = self._p
+
+        # Setup physics server for ik solver
+        self.pb = pybullet
+        self.arm = self.robot.robot_objectid[0]
+        self.indexed_joints, self.index_ee_link = index_joints_and_ee_link(
+            self.pb, self._p, self.arm, self.joints, self.ee_link
+        )
+
+    @register.states()
+    def reset(self):
+        self._last_ee_pose_goal = None
+        self._last_goal = None
+
+    @register.inputs(
+        tick=Space(shape=(), dtype="int64"),
+        ee_pose=Space(low=[-2, -2, 0, -1, -1, -1, -1], high=[2, 2, 2, 1, 1, 1, 1], dtype="float32"),
+    )
+    @register.outputs(goal=Space(dtype="float32"))
+    def callback(self, t_n: float, tick: Msg, ee_pose: Msg = None):
+        ee_pose_goal = ee_pose.msgs[-1]
+        ee_pos_goal = ee_pose_goal[:3]
+        ee_orn_goal = ee_pose_goal[3:]
+
+        # Determine status: 0: ongoing, 1: success
+        if self._last_ee_pose_goal is None or not np.allclose(self._last_ee_pose_goal, ee_pose_goal):
+            self._last_ee_pose_goal = ee_pose_goal
+            run_ik = True
+        else:
+            run_ik = False
+
+        if not run_ik and self._last_goal is not None:
+            return dict(goal=self._last_goal.astype("float32"))
+        else:
+            goal = self.pb.calculateInverseKinematics(
+                bodyUniqueId=self.arm,
+                endEffectorLinkIndex=self.index_ee_link,
+                targetPosition=ee_pos_goal,
+                targetOrientation=ee_orn_goal,
+                lowerLimits=self.lower,
+                upperLimits=self.upper,
+                jointRanges=self.upper - self.lower,
+                restPoses=self.rest_poses,
+                # currentPositions=current.tolist(),
+                maxNumIterations=100,
+                residualThreshold=1e-5,
+                physicsClientId=self._p,
+            )
+            goal = np.array(goal[0 : len(self.lower)], dtype="float32")
+            # goal[2:] = (goal[2:] + np.pi) % (2 * np.pi) - np.pi
+            self._last_goal = goal
+            return dict(goal=goal)

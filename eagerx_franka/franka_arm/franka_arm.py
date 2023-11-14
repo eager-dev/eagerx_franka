@@ -31,8 +31,10 @@ class FrankaArm(eagerx.Object):
         vel_control=Space(dtype="float32"),
         gripper_control=Space(low=[0], high=[1], dtype="float32"),
         moveit_to=Space(dtype="float32"),
+        moveit_to_ee_pose=Space(dtype="float32"),
     )
     @register.engine_states(
+        ee_pose=Space(low=[-2, -2, 0, -1, -1, -1, -1], high=[2, 2, 2, 1, 1, 1, 1], dtype="float32"),
         position=Space(dtype="float32"),
         velocity=Space(dtype="float32"),
         gripper=Space(low=[0.5], high=[0.5], dtype="float32"),
@@ -123,6 +125,7 @@ class FrankaArm(eagerx.Object):
         spec.sensors.moveit_status.rate = rate
         spec.actuators.pos_control.rate = rate
         spec.actuators.moveit_to.rate = rate
+        spec.actuators.moveit_to_ee_pose.rate = rate
         spec.actuators.vel_control.rate = rate
         spec.actuators.gripper_control.rate = 1
 
@@ -135,6 +138,7 @@ class FrankaArm(eagerx.Object):
         spec.actuators.pos_control.space.update(low=joint_lower, high=joint_upper)
         spec.actuators.vel_control.space.update(low=[-v for v in vel_limit], high=vel_limit)
         spec.actuators.moveit_to.space.update(low=joint_lower, high=joint_upper)
+        spec.actuators.moveit_to_ee_pose.space.update(low=[-2, -2, 0, -1, -1, -1, -1], high=[2, 2, 2, 1, 1, 1, 1])
         spec.states.position.space.update(low=[0.0 for _j in joint_lower], high=[0.0 for _j in joint_upper])
         spec.states.velocity.space.update(low=[0.0 for _j in joint_lower], high=[0.0 for _j in joint_upper])
         return spec
@@ -166,11 +170,18 @@ class FrankaArm(eagerx.Object):
         scale = float(upper[0]) - float(lower[0])
 
         # Create engine_states (no agnostic states defined in this case)
-        from eagerx_franka.franka_arm.pybullet.enginestates import FrankaGripper
+        from eagerx_franka.franka_arm.pybullet.enginestates import FrankaGripper, PoseState
         from eagerx_pybullet.enginestates import JointState
 
         joints = spec.config.joint_names
         spec.engine.states.gripper = FrankaGripper.make(spec.config.gripper_names, constant, scale)
+        spec.engine.states.ee_pose = PoseState.make(
+            joints=spec.config.joint_names,
+            upper=spec.config.joint_upper,
+            lower=spec.config.joint_lower,
+            ee_link=spec.config.gripper_link,
+            rest_poses=spec.config.sleep_positions,
+        )
         spec.engine.states.position = JointState.make(joints=joints, mode="position")
         spec.engine.states.velocity = JointState.make(joints=joints, mode="velocity")
 
@@ -180,7 +191,7 @@ class FrankaArm(eagerx.Object):
 
         # Create sensor engine nodes
         from eagerx_pybullet.enginenodes import LinkSensor, JointSensor, JointController
-        from eagerx_franka.franka_arm.pybullet.enginenodes import MoveItController
+        from eagerx_franka.franka_arm.pybullet.enginenodes import MoveItController, TaskSpaceControl
 
         pos_sensor = JointSensor.make("pos_sensor", rate=spec.sensors.position.rate, process=2, joints=joints, mode="position")
         vel_sensor = JointSensor.make("vel_sensor", rate=spec.sensors.velocity.rate, process=2, joints=joints, mode="velocity")
@@ -256,6 +267,27 @@ class FrankaArm(eagerx.Object):
             max_force=len(joints) * [5.0],
         )
 
+        ik_ee_pose = TaskSpaceControl.make(
+            "task_space",
+            rate=spec.actuators.moveit_to_ee_pose.rate,
+            joints=spec.config.joint_names,
+            upper=spec.config.joint_upper,
+            lower=spec.config.joint_lower,
+            ee_link=spec.config.gripper_link,
+            rest_poses=spec.config.sleep_positions,
+        )
+
+        moveit_to_ee_pose = MoveItController.make(
+            "moveit_to_ee_pose",
+            rate=spec.actuators.moveit_to_ee_pose.rate,
+            joints=joints,
+            vel_target=len(joints) * [0.0],
+            pos_gain=len(joints) * [0.5],
+            vel_gain=len(joints) * [1.0],
+            max_vel=[0.5 * vel for vel in spec.config.vel_limit],
+            max_force=len(joints) * [5.0],
+        )
+
         from eagerx_franka.franka_arm.processor import MirrorAction
 
         gripper.inputs.action.processor = MirrorAction.make(index=0, constant=constant, scale=scale)
@@ -273,6 +305,8 @@ class FrankaArm(eagerx.Object):
                 vel_control,
                 gripper,
                 moveit_to,
+                ik_ee_pose,
+                moveit_to_ee_pose,
             ]
         )
         graph.connect(source=pos_sensor.outputs.obs, sensor="position")
@@ -286,3 +320,5 @@ class FrankaArm(eagerx.Object):
         graph.connect(actuator="vel_control", target=vel_control.inputs.action)
         graph.connect(actuator="gripper_control", target=gripper.inputs.action)
         graph.connect(actuator="moveit_to", target=moveit_to.inputs.action)
+        graph.connect(actuator="moveit_to_ee_pose", target=ik_ee_pose.inputs.ee_pose)
+        graph.connect(source=ik_ee_pose.outputs.goal, target=moveit_to_ee_pose.inputs.action)
