@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.7 (2023-11-14)
+
+### Fix
+
+* Add task space control in simulation ([`de5edef`](https://github.com/eager-dev/eagerx_franka/commit/de5edefc6a6de9c3428495b986dea6846bd32580))
+
 ## v0.0.6 (2023-11-14)
 
 ### Fix
