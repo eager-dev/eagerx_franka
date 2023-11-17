@@ -18,6 +18,6 @@ class MirrorAction(eagerx.Processor):
 
     def convert(self, msg):
         action = self.scale * msg.data[self.index] + self.constant
-        mirrored = np.array([action, -action], dtype="float32")
+        mirrored = np.array([action, action], dtype="float32")
         mirrored += self.offset
         return mirrored
