@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.8 (2023-11-17)
+
+### Fix
+
+* Add real implementation ([`7ae7f6d`](https://github.com/eager-dev/eagerx_franka/commit/7ae7f6dca32dd9bdef4f213c6248d405d8401764))
+* Add real implementation ([`8323a48`](https://github.com/eager-dev/eagerx_franka/commit/8323a48f6478c0551683942aa6ae06b60f85a44f))
+
 ## v0.0.7 (2023-11-14)
 
 ### Fix
