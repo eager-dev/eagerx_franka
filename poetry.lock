@@ -454,6 +454,20 @@ eagerx = ">=0.1.32,<0.2.0"
 pybullet = ">=3.2.1,<4.0.0"
 
 [[package]]
+name = "eagerx-reality"
+version = "0.1.12"
+description = "Simple engine that can be used in reality together with several useful nodes."
+optional = false
+python-versions = ">=3.6.2,<4.0.0"
+files = [
+    {file = "eagerx_reality-0.1.12-py3-none-any.whl", hash = "sha256:0108f634c6dab28448e5a509113b2e64cc07fe474c6056fc0d9c7c21034016c0"},
+    {file = "eagerx_reality-0.1.12.tar.gz", hash = "sha256:bf1ecb450bb845c58527f528cbcf7ec12fa1806a0d637a90d9bf84614c07a945"},
+]
+
+[package.dependencies]
+eagerx = ">=0.1.32,<0.2.0"
+
+[[package]]
 name = "eagerx-utility"
 version = "0.0.3"
 description = "Template for creating EAGERx packages."
@@ -1980,4 +1994,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<3.11"
-content-hash = "72d7481b6b308d1a62307861abceaab3ec5f3224f9b52210c732c0bf229c2526"
+content-hash = "228bfcf8bee22d9a1fc15a305d1a44715595889fe775da8b255c4bbd86fb0768"
