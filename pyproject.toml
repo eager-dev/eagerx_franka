@@ -18,7 +18,7 @@ urdf-parser-py = "^0.0.4"
 eagerx-reality = "^0.1.12"
 
 [tool.poetry.dev-dependencies]
-black = "^22.1.0"
+black = "^23.11.0"
 pytest = "^7.0"
 pytest-cov = "^4.0.0"
 flake8 = ">=3"
