@@ -14,7 +14,7 @@ on:
 jobs:
   test:
     # Skip CI if [ci skip] in the commit message
-    if: "! contains(toJSON(github.event.commits.*.message), '[ci skip]') || contains(github.event.head_commit.message, 'Merge')"
+    if: "! contains(toJSON(github.event.commits.*.message), '[ci skip]') || github.event.pull_request.merged == true"
     strategy:
       fail-fast: true
       matrix:
