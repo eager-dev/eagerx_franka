@@ -1,6 +1,7 @@
 import eagerx
 from eagerx import Space
 from eagerx_pybullet.engine import PybulletEngine
+from eagerx_reality.engine import RealEngine
 from eagerx.core.specs import ObjectSpec
 from eagerx.core.graph_engine import EngineGraph
 import eagerx.core.register as register
@@ -71,6 +72,7 @@ class FrankaArm(eagerx.Object):
 
         gripper_names = [joint.name for joint in urdf.joints if "finger" in joint.name]
         gripper_link = [link.name for link in urdf.links if f"{robot_type}_link8" in link.name][0]
+        gripper_link = [link.name for link in urdf.links if f"{robot_type}_grasptarget" in link.name][0]
 
         # Determine joint limits
         joint_names = []
@@ -251,7 +253,7 @@ class FrankaArm(eagerx.Object):
             joints=spec.config.gripper_names,
             mode="position_control",
             vel_target=[0.0, 0.0],
-            pos_gain=[0.5, 0.5],
+            pos_gain=[0.1, 0.1],
             vel_gain=[1.0, 1.0],
             max_force=[2.0, 2.0],
         )
@@ -322,3 +324,98 @@ class FrankaArm(eagerx.Object):
         graph.connect(actuator="moveit_to", target=moveit_to.inputs.action)
         graph.connect(actuator="moveit_to_ee_pose", target=ik_ee_pose.inputs.ee_pose)
         graph.connect(source=ik_ee_pose.outputs.goal, target=moveit_to_ee_pose.inputs.action)
+
+    @staticmethod
+    @register.engine(RealEngine)
+    def reality_engine(spec: ObjectSpec, graph: EngineGraph):
+        """Engine-specific implementation (reality) of the object."""
+        # Determine gripper min/max
+        from eagerx_franka.franka_arm.real.enginestates import DummyState
+
+        spec.engine.states.position = DummyState.make()
+        spec.engine.states.velocity = DummyState.make()
+        spec.engine.states.gripper = DummyState.make()
+        spec.engine.states.ee_pose = DummyState.make()
+
+        # Create sensor engine nodes
+        from eagerx_franka.franka_arm.real.enginenodes import FrankaSensor, FrankaGripper, TaskSpaceControl
+
+        joints = spec.config.joint_names
+        robot_type = spec.config.robot_type
+        arm_name = spec.config.arm_name
+
+        # todo: set space to limits (pos=joint_limits, vel=vel_limits, effort=[-1, 1]?)
+        pos_sensor = FrankaSensor.make(
+            "pos_sensor",
+            rate=spec.sensors.position.rate,
+            joints=joints,
+            mode="position",
+            arm_name=arm_name,
+            robot_type=robot_type,
+        )
+        ee_pos_sensor = FrankaSensor.make(
+            "ee_pos_sensor",
+            rate=spec.sensors.ee_pos.rate,
+            joints=joints,
+            mode="ee_position",
+            arm_name=arm_name,
+            robot_type=robot_type,
+        )
+        ee_orn_sensor = FrankaSensor.make(
+            "ee_orn_sensor",
+            rate=spec.sensors.ee_orn.rate,
+            joints=joints,
+            mode="ee_orientation",
+            arm_name=arm_name,
+            robot_type=robot_type,
+        )
+        vel_sensor = FrankaSensor.make(
+            "vel_sensor",
+            rate=spec.sensors.velocity.rate,
+            joints=joints,
+            mode="velocity",
+            arm_name=arm_name,
+            robot_type=robot_type,
+        )
+        gripper_sensor = FrankaSensor.make(
+            "gripper_sensor",
+            rate=spec.sensors.gripper_position.rate,
+            joints=joints,
+            mode="gripper_position",
+            arm_name=arm_name,
+            robot_type=robot_type,
+        )
+
+        gripper = FrankaGripper.make(
+            "gripper_control",
+            rate=spec.actuators.gripper_control.rate,
+            arm_name=arm_name,
+            robot_type=robot_type,
+        )
+
+        task_space_control = TaskSpaceControl.make(
+            "task_space_control",
+            rate=spec.actuators.moveit_to_ee_pose.rate,
+            arm_name=arm_name,
+            robot_type=robot_type,
+        )
+
+        # Connect all engine nodes
+        graph.add(
+            [
+                pos_sensor,
+                vel_sensor,
+                ee_pos_sensor,
+                ee_orn_sensor,
+                gripper_sensor,
+                task_space_control,
+                gripper,
+            ]
+        )
+        graph.connect(source=pos_sensor.outputs.obs, sensor="position")
+        graph.connect(source=vel_sensor.outputs.obs, sensor="velocity")
+        graph.connect(source=ee_pos_sensor.outputs.obs, sensor="ee_pos")
+        graph.connect(source=ee_orn_sensor.outputs.obs, sensor="ee_orn")
+        graph.connect(source=gripper_sensor.outputs.obs, sensor="gripper_position")
+        graph.connect(actuator="gripper_control", target=gripper.inputs.action)
+        graph.connect(actuator="moveit_to_ee_pose", target=task_space_control.inputs.ee_pose)

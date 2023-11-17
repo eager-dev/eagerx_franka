@@ -39,7 +39,7 @@ class FrankaGripper(eagerx.EngineState):
         def cb(state):
             # Mirror & scale gripper position
             pos = scale * state[0] + constant
-            gripper_pos = [pos, -pos]
+            gripper_pos = [pos, pos]
 
             # Only 1-dof joints are supported here.
             # https://github.com/bulletphysics/bullet3/issues/2803
