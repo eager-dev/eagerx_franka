@@ -82,19 +82,6 @@ jobs:
       - name: Run tests
         run: |
           poetry run make pytest
-      #-----------------------------------------------
-      #             Create coverage badge
-      #-----------------------------------------------
-      - name: Create coverage badge
-        run: |
-          make coverage-badge
-      - name: Add & Commit
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: ${{ github.actor }}
-          author_email: ${{ github.actor }}@users.noreply.github.com
-          message: "ci: Update coverage badge"
-          add: "coverage.svg"
   release:
     needs: test
     # https://github.community/t/how-do-i-specify-job-dependency-running-in-another-workflow/16482
