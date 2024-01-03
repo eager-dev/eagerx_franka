@@ -25,6 +25,17 @@ You can install the package using pip:
 pip3 install eagerx_franka
 ```
 
+Requirements for usage with real Franka robot:
+- [ros noetic](http://wiki.ros.org/noetic/Installation/Ubuntu)
+- [franka_human_friendly_controllers](https://github.com/franzesegiovanni/franka_human_friendly_controllers) see [installation instructions](https://github.com/tud-phi/franka-emika-guide)
+
+
+Credits
+-------
+
+The code within `eagerx_franka.panda_ros` is copied from [panda_ros_py](https://github.com/platonics-delft/panda-ros-py) and from [quaternion_algebra](https://github.com/franzesegiovanni/quaternion_algebra).
+
+
 Cite EAGERx
 -----------
 

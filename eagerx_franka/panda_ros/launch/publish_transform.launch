@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+
+<launch>
+
+	<node pkg="tf" type="static_transform_publisher" name="camera_tf_publisher" args="0.05629987850656839 -0.01132741210280858 0.05785982799575437 -0.00011164048166480198 -0.00530401099687805 0.6959064699859127 0.7181128323846426 panda_hand camera_color_optical_frame 100" />
+
+</launch>

@@ -5,8 +5,7 @@ from eagerx.core.specs import NodeSpec
 import eagerx.core.register as register
 from eagerx.utils.utils import Msg
 import numpy as np
-from scipy.spatial.transform import Rotation as R
-from panda_ros.panda import Panda as Client
+from eagerx_franka.panda_ros.panda import Panda as Client
 
 
 class FrankaSensor(eagerx.EngineNode):
