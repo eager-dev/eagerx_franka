@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.10 (2024-01-03)
+
+### Fix
+
+* New release with panda_ros ([`3d0326f`](https://github.com/eager-dev/eagerx_franka/commit/3d0326f0efc37978705db4af8b41634f8d03ecda))
+
 ## v0.0.9 (2024-01-03)
 
 ### Fix
