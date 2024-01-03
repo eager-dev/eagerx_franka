@@ -22,8 +22,8 @@ codestyle:
 lint:
 	# stop the build if there are Python syntax errors or undefined names
 	# see https://lintlyci.github.io/Flake8Rules/
-	poetry run flake8 ${LINT_PATHS} --count --select=E9,F63,F7,F82 --show-source --statistics
+	poetry run flake8 ${LINT_PATHS} --count --select=E9,F63,F7,F82 --show-source --statistics --exclude eagerx_franka/panda_ros
 	# exit-zero treats all errors as warnings.
-	poetry run flake8 ${LINT_PATHS} --count --exit-zero --statistics
+	poetry run flake8 ${LINT_PATHS} --count --exit-zero --statistics --exclude eagerx_franka/panda_ros
 
 .PHONY: check-codestyle
