@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.9 (2024-01-03)
+
+### Fix
+
+* Add panda_ros code for real implementation ([`3802537`](https://github.com/eager-dev/eagerx_franka/commit/3802537ca5698c8fa1cb3d5999135557ea9fce6f))
+* Codestyle, add quaternion functions and update readme ([`3a91b43`](https://github.com/eager-dev/eagerx_franka/commit/3a91b43786eaed809657a34546a259361053398a))
+
 ## v0.0.8 (2023-11-17)
 
 ### Fix
