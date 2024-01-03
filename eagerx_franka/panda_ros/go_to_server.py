@@ -3,9 +3,10 @@ import actionlib
 from eagerx_franka.panda_ros.msg import GoToPoseAction, GoToPoseResult
 from geometry_msgs.msg import PoseStamped
 
+
 class GoToPoseServer:
     def __init__(self):
-        self.server = actionlib.SimpleActionServer('go_to_pose', GoToPoseAction, self.execute, False)
+        self.server = actionlib.SimpleActionServer("go_to_pose", GoToPoseAction, self.execute, False)
         self.server.start()
 
     def execute(self, goal):
@@ -24,7 +25,8 @@ class GoToPoseServer:
         # Your go_to_pose function here
         pass
 
-if __name__ == '__main__':
-    rospy.init_node('go_to_pose_server')
+
+if __name__ == "__main__":
+    rospy.init_node("go_to_pose_server")
     server = GoToPoseServer()
     rospy.spin()
