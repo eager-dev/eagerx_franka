@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.11 (2024-01-03)
+
+### Fix
+
+* Trigger release ([`f34802c`](https://github.com/eager-dev/eagerx_franka/commit/f34802c743f1ca2949cfbcb79d843f29bc669d25))
+
 ## v0.0.10 (2024-01-03)
 
 ### Fix
