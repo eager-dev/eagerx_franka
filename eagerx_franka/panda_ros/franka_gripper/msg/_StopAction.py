@@ -8,7 +8,7 @@ import genpy
 import struct
 
 import actionlib_msgs.msg
-import franka_gripper.msg
+import eagerx_franka.panda_ros.franka_gripper.msg
 import genpy
 import std_msgs.msg
 
@@ -138,15 +138,15 @@ MSG: franka_gripper/StopFeedback
             super(StopAction, self).__init__(*args, **kwds)
             # message fields cannot be None, assign default values for those that are
             if self.action_goal is None:
-                self.action_goal = franka_gripper.msg.StopActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.StopActionGoal()
             if self.action_result is None:
-                self.action_result = franka_gripper.msg.StopActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.StopActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_gripper.msg.StopActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.StopActionFeedback()
         else:
-            self.action_goal = franka_gripper.msg.StopActionGoal()
-            self.action_result = franka_gripper.msg.StopActionResult()
-            self.action_feedback = franka_gripper.msg.StopActionFeedback()
+            self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.StopActionGoal()
+            self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.StopActionResult()
+            self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.StopActionFeedback()
 
     def _get_types(self):
         """
@@ -264,11 +264,11 @@ MSG: franka_gripper/StopFeedback
             codecs.lookup_error("rosmsg").msg_type = self._type
         try:
             if self.action_goal is None:
-                self.action_goal = franka_gripper.msg.StopActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.StopActionGoal()
             if self.action_result is None:
-                self.action_result = franka_gripper.msg.StopActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.StopActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_gripper.msg.StopActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.StopActionFeedback()
             end = 0
             _x = self
             start = end
@@ -522,11 +522,11 @@ MSG: franka_gripper/StopFeedback
             codecs.lookup_error("rosmsg").msg_type = self._type
         try:
             if self.action_goal is None:
-                self.action_goal = franka_gripper.msg.StopActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.StopActionGoal()
             if self.action_result is None:
-                self.action_result = franka_gripper.msg.StopActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.StopActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_gripper.msg.StopActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.StopActionFeedback()
             end = 0
             _x = self
             start = end

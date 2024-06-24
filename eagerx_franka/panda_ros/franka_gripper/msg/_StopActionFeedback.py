@@ -8,7 +8,7 @@ import genpy
 import struct
 
 import actionlib_msgs.msg
-import franka_gripper.msg
+import eagerx_franka.panda_ros.franka_gripper.msg
 import genpy
 import std_msgs.msg
 
@@ -108,11 +108,11 @@ MSG: franka_gripper/StopFeedback
             if self.status is None:
                 self.status = actionlib_msgs.msg.GoalStatus()
             if self.feedback is None:
-                self.feedback = franka_gripper.msg.StopFeedback()
+                self.feedback = eagerx_franka.panda_ros.franka_gripper.msg.StopFeedback()
         else:
             self.header = std_msgs.msg.Header()
             self.status = actionlib_msgs.msg.GoalStatus()
-            self.feedback = franka_gripper.msg.StopFeedback()
+            self.feedback = eagerx_franka.panda_ros.franka_gripper.msg.StopFeedback()
 
     def _get_types(self):
         """
@@ -168,7 +168,7 @@ MSG: franka_gripper/StopFeedback
             if self.status is None:
                 self.status = actionlib_msgs.msg.GoalStatus()
             if self.feedback is None:
-                self.feedback = franka_gripper.msg.StopFeedback()
+                self.feedback = eagerx_franka.panda_ros.franka_gripper.msg.StopFeedback()
             end = 0
             _x = self
             start = end
@@ -269,7 +269,7 @@ MSG: franka_gripper/StopFeedback
             if self.status is None:
                 self.status = actionlib_msgs.msg.GoalStatus()
             if self.feedback is None:
-                self.feedback = franka_gripper.msg.StopFeedback()
+                self.feedback = eagerx_franka.panda_ros.franka_gripper.msg.StopFeedback()
             end = 0
             _x = self
             start = end

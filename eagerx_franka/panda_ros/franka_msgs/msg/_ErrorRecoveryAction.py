@@ -8,7 +8,7 @@ import genpy
 import struct
 
 import actionlib_msgs.msg
-import franka_msgs.msg
+import eagerx_franka.panda_ros.franka_msgs.msg
 import genpy
 import std_msgs.msg
 
@@ -140,15 +140,15 @@ MSG: franka_msgs/ErrorRecoveryFeedback
             super(ErrorRecoveryAction, self).__init__(*args, **kwds)
             # message fields cannot be None, assign default values for those that are
             if self.action_goal is None:
-                self.action_goal = franka_msgs.msg.ErrorRecoveryActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionGoal()
             if self.action_result is None:
-                self.action_result = franka_msgs.msg.ErrorRecoveryActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_msgs.msg.ErrorRecoveryActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionFeedback()
         else:
-            self.action_goal = franka_msgs.msg.ErrorRecoveryActionGoal()
-            self.action_result = franka_msgs.msg.ErrorRecoveryActionResult()
-            self.action_feedback = franka_msgs.msg.ErrorRecoveryActionFeedback()
+            self.action_goal = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionGoal()
+            self.action_result = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionResult()
+            self.action_feedback = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionFeedback()
 
     def _get_types(self):
         """
@@ -258,11 +258,11 @@ MSG: franka_msgs/ErrorRecoveryFeedback
             codecs.lookup_error("rosmsg").msg_type = self._type
         try:
             if self.action_goal is None:
-                self.action_goal = franka_msgs.msg.ErrorRecoveryActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionGoal()
             if self.action_result is None:
-                self.action_result = franka_msgs.msg.ErrorRecoveryActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_msgs.msg.ErrorRecoveryActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionFeedback()
             end = 0
             _x = self
             start = end
@@ -495,11 +495,11 @@ MSG: franka_msgs/ErrorRecoveryFeedback
             codecs.lookup_error("rosmsg").msg_type = self._type
         try:
             if self.action_goal is None:
-                self.action_goal = franka_msgs.msg.ErrorRecoveryActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionGoal()
             if self.action_result is None:
-                self.action_result = franka_msgs.msg.ErrorRecoveryActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_msgs.msg.ErrorRecoveryActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryActionFeedback()
             end = 0
             _x = self
             start = end

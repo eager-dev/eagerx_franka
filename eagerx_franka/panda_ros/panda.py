@@ -73,7 +73,7 @@ class Panda:
         self.curr_pos_goal = None
         self.curr_ori_goal = None
         self.attractor_distance_threshold = 0.05
-        self.max_force = 4.5  # [N]
+        self.max_force = 2  # [N]
         self.force_min_exit = 1  # [N]
         self._from = None
         self.goal_pose = None
@@ -201,14 +201,14 @@ class Panda:
         joint_des.data = np.array(joint).astype(np.float32)
         self.configuration_pub.publish(joint_des)
 
-    def go_to_pose_array(self, goal_pose, do_spiral_search=False, interp_dist=0.001, interp_dist_polar=0.001):
+    def go_to_pose_array(self, goal_pose, do_spiral_search=True, interp_dist=0.001, interp_dist_polar=0.001):
         if len(goal_pose) != 7:
             print("goal pose has wrong length")
             print(f"goal pose is {goal_pose}")
         goal_pose = array_array_2_pose(goal_pose[0:3], goal_pose[3:7])
         self.go_to_pose(goal_pose, do_spiral_search, interp_dist, interp_dist_polar)
 
-    def go_to_pose(self, goal_pose, do_spiral_search=False, interp_dist=0.001, interp_dist_polar=0.001):
+    def go_to_pose(self, goal_pose, do_spiral_search=True, interp_dist=0.001, interp_dist_polar=0.001):
         if self.goal_pose is not None:
             if (
                 self.goal_pose.pose.position.x == goal_pose.pose.position.x
@@ -233,7 +233,7 @@ class Panda:
         self.go_to_pose_thread.start()
 
     # control robot to desired goal position
-    def _go_to_pose(self, goal_pose, do_spiral_search=False, interp_dist=0.001, interp_dist_polar=0.001):
+    def _go_to_pose(self, goal_pose, do_spiral_search=True, interp_dist=0.001, interp_dist_polar=0.001):
         # the goal pose should be of type PoseStamped. E.g. goal_pose=PoseStampled()
         control_rate = 100
         r = rospy.Rate(control_rate)

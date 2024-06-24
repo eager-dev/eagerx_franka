@@ -8,7 +8,7 @@ import genpy
 import struct
 
 import actionlib_msgs.msg
-import franka_msgs.msg
+import eagerx_franka.panda_ros.franka_msgs.msg
 import genpy
 import std_msgs.msg
 
@@ -107,11 +107,11 @@ MSG: franka_msgs/ErrorRecoveryResult
             if self.status is None:
                 self.status = actionlib_msgs.msg.GoalStatus()
             if self.result is None:
-                self.result = franka_msgs.msg.ErrorRecoveryResult()
+                self.result = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryResult()
         else:
             self.header = std_msgs.msg.Header()
             self.status = actionlib_msgs.msg.GoalStatus()
-            self.result = franka_msgs.msg.ErrorRecoveryResult()
+            self.result = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryResult()
 
     def _get_types(self):
         """
@@ -167,7 +167,7 @@ MSG: franka_msgs/ErrorRecoveryResult
             if self.status is None:
                 self.status = actionlib_msgs.msg.GoalStatus()
             if self.result is None:
-                self.result = franka_msgs.msg.ErrorRecoveryResult()
+                self.result = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryResult()
             end = 0
             _x = self
             start = end
@@ -268,7 +268,7 @@ MSG: franka_msgs/ErrorRecoveryResult
             if self.status is None:
                 self.status = actionlib_msgs.msg.GoalStatus()
             if self.result is None:
-                self.result = franka_msgs.msg.ErrorRecoveryResult()
+                self.result = eagerx_franka.panda_ros.franka_msgs.msg.ErrorRecoveryResult()
             end = 0
             _x = self
             start = end

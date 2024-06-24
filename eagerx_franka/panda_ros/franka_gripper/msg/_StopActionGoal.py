@@ -8,7 +8,7 @@ import genpy
 import struct
 
 import actionlib_msgs.msg
-import franka_gripper.msg
+import eagerx_franka.panda_ros.franka_gripper.msg
 import genpy
 import std_msgs.msg
 
@@ -81,11 +81,11 @@ MSG: franka_gripper/StopGoal
             if self.goal_id is None:
                 self.goal_id = actionlib_msgs.msg.GoalID()
             if self.goal is None:
-                self.goal = franka_gripper.msg.StopGoal()
+                self.goal = eagerx_franka.panda_ros.franka_gripper.msg.StopGoal()
         else:
             self.header = std_msgs.msg.Header()
             self.goal_id = actionlib_msgs.msg.GoalID()
-            self.goal = franka_gripper.msg.StopGoal()
+            self.goal = eagerx_franka.panda_ros.franka_gripper.msg.StopGoal()
 
     def _get_types(self):
         """
@@ -133,7 +133,7 @@ MSG: franka_gripper/StopGoal
             if self.goal_id is None:
                 self.goal_id = actionlib_msgs.msg.GoalID()
             if self.goal is None:
-                self.goal = franka_gripper.msg.StopGoal()
+                self.goal = eagerx_franka.panda_ros.franka_gripper.msg.StopGoal()
             end = 0
             _x = self
             start = end
@@ -214,7 +214,7 @@ MSG: franka_gripper/StopGoal
             if self.goal_id is None:
                 self.goal_id = actionlib_msgs.msg.GoalID()
             if self.goal is None:
-                self.goal = franka_gripper.msg.StopGoal()
+                self.goal = eagerx_franka.panda_ros.franka_gripper.msg.StopGoal()
             end = 0
             _x = self
             start = end
