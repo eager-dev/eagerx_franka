@@ -7,7 +7,7 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import franka_msgs.msg
+import eagerx_franka.panda_ros.franka_msgs.msg
 import std_msgs.msg
 
 
@@ -351,9 +351,9 @@ bool base_acceleration_invalid_reading
             if self.robot_mode is None:
                 self.robot_mode = 0
             if self.current_errors is None:
-                self.current_errors = franka_msgs.msg.Errors()
+                self.current_errors = eagerx_franka.panda_ros.franka_msgs.msg.Errors()
             if self.last_motion_errors is None:
-                self.last_motion_errors = franka_msgs.msg.Errors()
+                self.last_motion_errors = eagerx_franka.panda_ros.franka_msgs.msg.Errors()
         else:
             self.header = std_msgs.msg.Header()
             self.cartesian_collision = [0.0] * 6
@@ -401,8 +401,8 @@ bool base_acceleration_invalid_reading
             self.time = 0.0
             self.control_command_success_rate = 0.0
             self.robot_mode = 0
-            self.current_errors = franka_msgs.msg.Errors()
-            self.last_motion_errors = franka_msgs.msg.Errors()
+            self.current_errors = eagerx_franka.panda_ros.franka_msgs.msg.Errors()
+            self.last_motion_errors = eagerx_franka.panda_ros.franka_msgs.msg.Errors()
 
     def _get_types(self):
         """
@@ -575,9 +575,9 @@ bool base_acceleration_invalid_reading
             if self.header is None:
                 self.header = std_msgs.msg.Header()
             if self.current_errors is None:
-                self.current_errors = franka_msgs.msg.Errors()
+                self.current_errors = eagerx_franka.panda_ros.franka_msgs.msg.Errors()
             if self.last_motion_errors is None:
-                self.last_motion_errors = franka_msgs.msg.Errors()
+                self.last_motion_errors = eagerx_franka.panda_ros.franka_msgs.msg.Errors()
             end = 0
             _x = self
             start = end
@@ -1181,9 +1181,9 @@ bool base_acceleration_invalid_reading
             if self.header is None:
                 self.header = std_msgs.msg.Header()
             if self.current_errors is None:
-                self.current_errors = franka_msgs.msg.Errors()
+                self.current_errors = eagerx_franka.panda_ros.franka_msgs.msg.Errors()
             if self.last_motion_errors is None:
-                self.last_motion_errors = franka_msgs.msg.Errors()
+                self.last_motion_errors = eagerx_franka.panda_ros.franka_msgs.msg.Errors()
             end = 0
             _x = self
             start = end

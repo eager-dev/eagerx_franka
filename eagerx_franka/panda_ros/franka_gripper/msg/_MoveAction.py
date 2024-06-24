@@ -8,7 +8,7 @@ import genpy
 import struct
 
 import actionlib_msgs.msg
-import franka_gripper.msg
+import eagerx_franka.panda_ros.franka_gripper.msg
 import genpy
 import std_msgs.msg
 
@@ -140,15 +140,15 @@ MSG: franka_gripper/MoveFeedback
             super(MoveAction, self).__init__(*args, **kwds)
             # message fields cannot be None, assign default values for those that are
             if self.action_goal is None:
-                self.action_goal = franka_gripper.msg.MoveActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionGoal()
             if self.action_result is None:
-                self.action_result = franka_gripper.msg.MoveActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_gripper.msg.MoveActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionFeedback()
         else:
-            self.action_goal = franka_gripper.msg.MoveActionGoal()
-            self.action_result = franka_gripper.msg.MoveActionResult()
-            self.action_feedback = franka_gripper.msg.MoveActionFeedback()
+            self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionGoal()
+            self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionResult()
+            self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionFeedback()
 
     def _get_types(self):
         """
@@ -270,11 +270,11 @@ MSG: franka_gripper/MoveFeedback
             codecs.lookup_error("rosmsg").msg_type = self._type
         try:
             if self.action_goal is None:
-                self.action_goal = franka_gripper.msg.MoveActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionGoal()
             if self.action_result is None:
-                self.action_result = franka_gripper.msg.MoveActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_gripper.msg.MoveActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionFeedback()
             end = 0
             _x = self
             start = end
@@ -534,11 +534,11 @@ MSG: franka_gripper/MoveFeedback
             codecs.lookup_error("rosmsg").msg_type = self._type
         try:
             if self.action_goal is None:
-                self.action_goal = franka_gripper.msg.MoveActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionGoal()
             if self.action_result is None:
-                self.action_result = franka_gripper.msg.MoveActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_gripper.msg.MoveActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.MoveActionFeedback()
             end = 0
             _x = self
             start = end

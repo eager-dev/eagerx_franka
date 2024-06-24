@@ -8,7 +8,7 @@ import genpy
 import struct
 
 import actionlib_msgs.msg
-import franka_gripper.msg
+import eagerx_franka.panda_ros.franka_gripper.msg
 import genpy
 import std_msgs.msg
 
@@ -83,11 +83,11 @@ float64 speed  # [m/s]
             if self.goal_id is None:
                 self.goal_id = actionlib_msgs.msg.GoalID()
             if self.goal is None:
-                self.goal = franka_gripper.msg.MoveGoal()
+                self.goal = eagerx_franka.panda_ros.franka_gripper.msg.MoveGoal()
         else:
             self.header = std_msgs.msg.Header()
             self.goal_id = actionlib_msgs.msg.GoalID()
-            self.goal = franka_gripper.msg.MoveGoal()
+            self.goal = eagerx_franka.panda_ros.franka_gripper.msg.MoveGoal()
 
     def _get_types(self):
         """
@@ -137,7 +137,7 @@ float64 speed  # [m/s]
             if self.goal_id is None:
                 self.goal_id = actionlib_msgs.msg.GoalID()
             if self.goal is None:
-                self.goal = franka_gripper.msg.MoveGoal()
+                self.goal = eagerx_franka.panda_ros.franka_gripper.msg.MoveGoal()
             end = 0
             _x = self
             start = end
@@ -227,7 +227,7 @@ float64 speed  # [m/s]
             if self.goal_id is None:
                 self.goal_id = actionlib_msgs.msg.GoalID()
             if self.goal is None:
-                self.goal = franka_gripper.msg.MoveGoal()
+                self.goal = eagerx_franka.panda_ros.franka_gripper.msg.MoveGoal()
             end = 0
             _x = self
             start = end

@@ -7,7 +7,7 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import franka_gripper.msg
+import eagerx_franka.panda_ros.franka_gripper.msg
 
 
 class GraspGoal(genpy.Message):
@@ -48,14 +48,14 @@ float64 outer # [m]
             if self.width is None:
                 self.width = 0.0
             if self.epsilon is None:
-                self.epsilon = franka_gripper.msg.GraspEpsilon()
+                self.epsilon = eagerx_franka.panda_ros.franka_gripper.msg.GraspEpsilon()
             if self.speed is None:
                 self.speed = 0.0
             if self.force is None:
                 self.force = 0.0
         else:
             self.width = 0.0
-            self.epsilon = franka_gripper.msg.GraspEpsilon()
+            self.epsilon = eagerx_franka.panda_ros.franka_gripper.msg.GraspEpsilon()
             self.speed = 0.0
             self.force = 0.0
 
@@ -87,7 +87,7 @@ float64 outer # [m]
             codecs.lookup_error("rosmsg").msg_type = self._type
         try:
             if self.epsilon is None:
-                self.epsilon = franka_gripper.msg.GraspEpsilon()
+                self.epsilon = eagerx_franka.panda_ros.franka_gripper.msg.GraspEpsilon()
             end = 0
             _x = self
             start = end
@@ -127,7 +127,7 @@ float64 outer # [m]
             codecs.lookup_error("rosmsg").msg_type = self._type
         try:
             if self.epsilon is None:
-                self.epsilon = franka_gripper.msg.GraspEpsilon()
+                self.epsilon = eagerx_franka.panda_ros.franka_gripper.msg.GraspEpsilon()
             end = 0
             _x = self
             start = end

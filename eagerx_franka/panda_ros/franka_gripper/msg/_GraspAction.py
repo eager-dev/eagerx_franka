@@ -8,7 +8,7 @@ import genpy
 import struct
 
 import actionlib_msgs.msg
-import franka_gripper.msg
+import eagerx_franka.panda_ros.franka_gripper.msg
 import genpy
 import std_msgs.msg
 
@@ -147,15 +147,15 @@ MSG: franka_gripper/GraspFeedback
             super(GraspAction, self).__init__(*args, **kwds)
             # message fields cannot be None, assign default values for those that are
             if self.action_goal is None:
-                self.action_goal = franka_gripper.msg.GraspActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionGoal()
             if self.action_result is None:
-                self.action_result = franka_gripper.msg.GraspActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_gripper.msg.GraspActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionFeedback()
         else:
-            self.action_goal = franka_gripper.msg.GraspActionGoal()
-            self.action_result = franka_gripper.msg.GraspActionResult()
-            self.action_feedback = franka_gripper.msg.GraspActionFeedback()
+            self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionGoal()
+            self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionResult()
+            self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionFeedback()
 
     def _get_types(self):
         """
@@ -280,11 +280,11 @@ MSG: franka_gripper/GraspFeedback
             codecs.lookup_error("rosmsg").msg_type = self._type
         try:
             if self.action_goal is None:
-                self.action_goal = franka_gripper.msg.GraspActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionGoal()
             if self.action_result is None:
-                self.action_result = franka_gripper.msg.GraspActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_gripper.msg.GraspActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionFeedback()
             end = 0
             _x = self
             start = end
@@ -550,11 +550,11 @@ MSG: franka_gripper/GraspFeedback
             codecs.lookup_error("rosmsg").msg_type = self._type
         try:
             if self.action_goal is None:
-                self.action_goal = franka_gripper.msg.GraspActionGoal()
+                self.action_goal = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionGoal()
             if self.action_result is None:
-                self.action_result = franka_gripper.msg.GraspActionResult()
+                self.action_result = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionResult()
             if self.action_feedback is None:
-                self.action_feedback = franka_gripper.msg.GraspActionFeedback()
+                self.action_feedback = eagerx_franka.panda_ros.franka_gripper.msg.GraspActionFeedback()
             end = 0
             _x = self
             start = end

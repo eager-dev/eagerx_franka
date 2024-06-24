@@ -8,7 +8,7 @@ import genpy
 import struct
 
 import actionlib_msgs.msg
-import franka_gripper.msg
+import eagerx_franka.panda_ros.franka_gripper.msg
 import genpy
 import std_msgs.msg
 
@@ -109,11 +109,11 @@ string error
             if self.status is None:
                 self.status = actionlib_msgs.msg.GoalStatus()
             if self.result is None:
-                self.result = franka_gripper.msg.GraspResult()
+                self.result = eagerx_franka.panda_ros.franka_gripper.msg.GraspResult()
         else:
             self.header = std_msgs.msg.Header()
             self.status = actionlib_msgs.msg.GoalStatus()
-            self.result = franka_gripper.msg.GraspResult()
+            self.result = eagerx_franka.panda_ros.franka_gripper.msg.GraspResult()
 
     def _get_types(self):
         """
@@ -177,7 +177,7 @@ string error
             if self.status is None:
                 self.status = actionlib_msgs.msg.GoalStatus()
             if self.result is None:
-                self.result = franka_gripper.msg.GraspResult()
+                self.result = eagerx_franka.panda_ros.franka_gripper.msg.GraspResult()
             end = 0
             _x = self
             start = end
@@ -299,7 +299,7 @@ string error
             if self.status is None:
                 self.status = actionlib_msgs.msg.GoalStatus()
             if self.result is None:
-                self.result = franka_gripper.msg.GraspResult()
+                self.result = eagerx_franka.panda_ros.franka_gripper.msg.GraspResult()
             end = 0
             _x = self
             start = end
