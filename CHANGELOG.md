@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.0.12 (2024-06-24)
+
+### Fix
+
+* Use custom franka_gripper and franka_msgs messages ([`4ccff41`](https://github.com/eager-dev/eagerx_franka/commit/4ccff4165920a5cfc1392e4f4ff2d983efc7b18e))
+
 ## v0.0.11 (2024-01-03)
 
 ### Fix
