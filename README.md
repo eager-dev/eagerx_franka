@@ -34,21 +34,6 @@ Credits
 
 The code within `eagerx_franka.panda_ros` is copied from [panda_ros_py](https://github.com/platonics-delft/panda-ros-py) and from [quaternion_algebra](https://github.com/franzesegiovanni/quaternion_algebra).
 
-
-Cite EAGERx
------------
-
-If you are using EAGERx for your scientific publications, please cite:
-
-``` {.sourceCode .bibtex}
-@article{van2024eagerx,
-  title={EAGERx: Graph-Based Framework for Sim2real Robot Learning},
-  author={van der Heijden, Bas and Luijkx, Jelle and Ferranti, Laura and Kober, Jens and Babuska, Robert},
-  journal={arXiv preprint arXiv:2407.04328},
-  year={2024}
-}
-```
-
 Acknowledgements
 ----------------
 
