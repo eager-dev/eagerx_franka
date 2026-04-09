@@ -2,7 +2,6 @@ import rospy
 import math
 import numpy as np
 from threading import Thread
-import quaternion  # pip install numpy-quaternion
 from sensor_msgs.msg import JointState
 from geometry_msgs.msg import PoseStamped, WrenchStamped
 from std_msgs.msg import Float32MultiArray
@@ -14,6 +13,7 @@ from eagerx_franka.panda_ros.pose_transform_functions import (
     position_2_array,
     orientation_2_quaternion,
     array_array_2_pose,
+    pos_quat_2_pose_st,
 )
 
 
@@ -110,6 +110,7 @@ class Panda:
         self.grasp_command.goal.width = 1
         joint_states = rospy.wait_for_message("/joint_states", JointState)
         self.joint_names = joint_states.name
+        self.set_stiffness(4000, 4000, 1000, 50, 50, 30, 0)  # get more compliant in z direction
 
         rospy.sleep(1)
 
@@ -233,7 +234,7 @@ class Panda:
         self.go_to_pose_thread.start()
 
     # control robot to desired goal position
-    def _go_to_pose(self, goal_pose, do_spiral_search=True, interp_dist=0.001, interp_dist_polar=0.001):
+    def _go_to_pose(self, goal_pose, do_spiral_search=True, interp_dist=0.0001, interp_dist_polar=0.0001):
         # the goal pose should be of type PoseStamped. E.g. goal_pose=PoseStampled()
         control_rate = 100
         r = rospy.Rate(control_rate)
@@ -263,6 +264,8 @@ class Panda:
             q_start.w = -q_start.w
         inner_prod = q_start.x * q_goal.x + q_start.y * q_goal.y + q_start.z * q_goal.z + q_start.w * q_goal.w
         theta = np.arccos(np.abs(inner_prod))
+        if np.isnan(theta):
+            theta = 0 
         step_num_polar = math.floor(theta / interp_dist_polar)
 
         step_num = np.max([step_num_polar, step_num_lin])
@@ -272,7 +275,6 @@ class Panda:
         z = np.linspace(start[2], goal_pose.pose.position.z, step_num)
 
         goal = PoseStamped()
-        self.set_stiffness(4000, 4000, 4000, 50, 50, 30, 0)
 
         for i in range(step_num):
             if self.goal_updated:
@@ -293,7 +295,7 @@ class Panda:
         if self.goal_updated:
             return
         self.goal_pub.publish(goal_pose)
-        self.offset_compensator(3)
+        self.compensator(7)
 
     def spiral_search(self, goal, control_rate=20):
         r = rospy.Rate(control_rate)
@@ -307,7 +309,6 @@ class Panda:
         goal_pose = array_quat_2_pose(goal_init, ori_quat)
         time = 0
         spiral_success = False
-        self.set_stiffness(4000, 4000, 1000, 50, 50, 30, 0)  # get more compliant in z direction
         for _ in range(max_spiral_time * control_rate):
             goal_pose.pose.position.x = (
                 pos_init[0] + np.cos(2 * np.pi * rounds_per_second * time) * increase_radius_per_second * time
@@ -321,7 +322,6 @@ class Panda:
                 break
             time += dt
             r.sleep()
-        self.set_stiffness(4000, 4000, 4000, 50, 50, 30, 0)
         offset_correction = self.curr_pos - goal_init
 
         return spiral_success, offset_correction
@@ -330,6 +330,8 @@ class Panda:
         curr_quat_desired = list_2_quaternion(np.copy(self.curr_ori_goal))
         curr_pos_desired = np.copy(self.curr_pos_goal)
         for _ in range(steps):
+            if self.goal_updated:
+                return
             curr_quat_goal = list_2_quaternion(self.curr_ori_goal)
             curr_pos_goal = self.curr_pos_goal
             curr_quat = list_2_quaternion(self.curr_ori)
@@ -343,6 +345,34 @@ class Panda:
             goal_pose = array_quat_2_pose(goal_pos, quat_goal_new)
             self.goal_pub.publish(goal_pose)
             rospy.sleep(0.2)
+
+
+    def compensator(self, time: float):
+        dt = 0.01
+        steps = int(time/dt)
+        curr_quat_desired= list_2_quaternion(np.copy(self.curr_ori_goal))
+        curr_pos_desired = np.copy(self.curr_pos_goal )
+        for _ in range(steps):
+            if self.goal_updated:
+                return
+            curr_quat_goal= list_2_quaternion(self.curr_ori_goal)
+            curr_pos_goal = self.curr_pos_goal
+            curr_quat = list_2_quaternion(self.curr_ori)    
+           
+                   
+            quat_diff = curr_quat_desired * curr_quat.inverse()
+            lin_diff = curr_pos_desired - self.curr_pos
+           
+           
+            quat_goal_new = quat_diff * curr_quat_goal
+            goal_pos = curr_pos_goal + lin_diff * dt
+
+            quat_goal_slerp = np.slerp_vectorized(curr_quat_goal, quat_goal_new, dt)
+           
+            goal_pose = pos_quat_2_pose_st(goal_pos, quat_goal_slerp)
+            self.goal_pub.publish(goal_pose)
+            rospy.sleep(dt)
+
 
     def set_joint_remapping(self, joint_names):
         """Remap joint measurement/commands based on this index mapping

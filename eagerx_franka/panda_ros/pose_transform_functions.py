@@ -80,3 +80,16 @@ def transform_pos_ori(pos: np.array, ori, transform):
 
 def list_2_quaternion(quaternion_list: list):
     return np.quaternion(quaternion_list[0], quaternion_list[1], quaternion_list[2], quaternion_list[3])
+
+
+def pos_quat_2_pose_st(pos_array, quat):
+    pose_st = PoseStamped()
+    pose_st.pose.position.x = pos_array[0]
+    pose_st.pose.position.y = pos_array[1]
+    pose_st.pose.position.z = pos_array[2]
+    pose_st.pose.orientation.x = quat.x
+    pose_st.pose.orientation.y = quat.y
+    pose_st.pose.orientation.z = quat.z
+    pose_st.pose.orientation.w = quat.w
+    return pose_st
+
